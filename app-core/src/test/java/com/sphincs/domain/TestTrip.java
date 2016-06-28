@@ -19,7 +19,7 @@ public class TestTrip extends Assert {
         Long id = 4L;
         Set<Category> categories = new HashSet<>();
         categories.add(Category.B);
-        Driver driver = new Driver(1L, "Vasili Ivanych", 48, categories, Car.FORD, "0013ih1", 6.2);
+        Driver driver = new Driver(1L, "Vasili Ivanych", 48, categories, Car.FORD, "0013ih1");
         String startPoint = "Brest";
         String endPoint = "Minsk";
         Integer distance = 340;
@@ -45,7 +45,7 @@ public class TestTrip extends Assert {
         trip = new Trip();
         Set<Category> categories = new HashSet<>();
         categories.add(Category.B);
-        Driver driver = new Driver(1L, "Vasili Ivanych", 48, categories, Car.FORD, "0013ih1", 6.2);
+        Driver driver = new Driver(1L, "Vasili Ivanych", 48, categories, Car.FORD, "0013ih1");
 
         Trip trip1 = new Trip(1L, driver, "Brest", "Minsk", 340, format.parse("27.06.2016 12:43:15"), format.parse("28.06.2016 12:43:15"));
         Trip trip2 = new Trip(1L, driver, "Brest", "Minsk", 340, format.parse("27.06.2016 12:43:15"), format.parse("28.06.2016 12:43:15"));

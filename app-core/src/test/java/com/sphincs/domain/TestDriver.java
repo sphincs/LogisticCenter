@@ -19,15 +19,15 @@ public class TestDriver extends Assert {
         categories.add(Category.C);
         Car car = Car.DAF;
         String number = "1707AB1";
-        Double fuelRate100 = 10.0;
+        Double fuelRate100 = car.getFuelRate();
 
-        driver = new Driver(id, name, age, categories, car, number, fuelRate100);
+        driver = new Driver(id, name, age, categories, car, number);
         assertEquals(id, driver.getId());
         assertEquals(name, driver.getName());
         assertEquals(age, driver.getAge());
         assertEquals(categories.toString(), driver.getCategories().toString());
         assertEquals(car, driver.getCar());
-        assertEquals(number, driver.getNumber());
+        assertEquals(number, driver.getCarNumber());
         assertEquals(fuelRate100, driver.getFuelRate100());
     }
 
@@ -42,9 +42,9 @@ public class TestDriver extends Assert {
         Set<Category> categories2 = new HashSet<>();
         categories2.add(Category.B);
 
-        Driver driver1 = new Driver(1L, "Vasili Ivanych", 48, categories1, Car.FORD, "0013ih1", 6.2);
-        Driver driver2 = new Driver(1L, "Vasili Ivanych", 48, categories1, Car.FORD, "0013ih1", 6.2);
-        Driver driver3 = new Driver(1L, "Vasili Ivanych", 48, categories2, Car.FORD, "0013ih1", 6.2);
+        Driver driver1 = new Driver(1L, "Vasili Ivanych", 48, categories1, Car.FORD, "0013ih1");
+        Driver driver2 = new Driver(1L, "Vasili Ivanych", 48, categories1, Car.FORD, "0013ih1");
+        Driver driver3 = new Driver(1L, "Vasili Ivanych", 48, categories2, Car.FORD, "0013ih1");
 
         assertEquals(driver, driver);
         assertEquals(driver1, driver2);

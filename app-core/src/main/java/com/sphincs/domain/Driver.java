@@ -9,20 +9,20 @@ public class Driver {
     private Integer age;
     private Set<Category> categories;
     private Car car;
-    private String number;
+    private String carNumber;
     private Double fuelRate100;
 
     public Driver() {
     }
 
-    public Driver(Long id, String name, Integer age, Set<Category> categories, Car car, String number, Double fuelRate) {
+    public Driver(Long id, String name, Integer age, Set<Category> categories, Car car, String carNumber) {
         this.id = id;
         this.name = name;
         this.age = age;
         this.categories = categories;
         this.car = car;
-        this.number = number;
-        this.fuelRate100 = fuelRate;
+        this.carNumber = carNumber;
+        this.fuelRate100 = car.getFuelRate();
     }
 
     public Integer getAge() {
@@ -49,8 +49,8 @@ public class Driver {
         return name;
     }
 
-    public String getNumber() {
-        return number;
+    public String getCarNumber() {
+        return carNumber;
     }
 
     public void setAge(Integer age) {
@@ -65,10 +65,6 @@ public class Driver {
         this.categories = categories;
     }
 
-    public void setFuelRate100(Double fuelRate) {
-        this.fuelRate100 = fuelRate;
-    }
-
     public void setId(Long id) {
         this.id = id;
     }
@@ -77,8 +73,8 @@ public class Driver {
         this.name = name;
     }
 
-    public void setNumber(String number) {
-        this.number = number;
+    public void setCarNumber(String carNumber) {
+        this.carNumber = carNumber;
     }
 
     @Override
@@ -95,7 +91,7 @@ public class Driver {
                 ", age=" + age +
                 ", categories=" + tempCategories +
                 ", car=" + car +
-                ", number=" + number +
+                ", carNumber=" + carNumber +
                 ", fuelRate100=" + fuelRate100 +
                 '}';
     }
@@ -121,7 +117,7 @@ public class Driver {
         } else if (driver.categories != null) return false;
 
         if (car != null ? !car.equals(driver.car) : driver.car != null) return false;
-        if (number != null ? !number.equals(driver.number) : driver.number != null) return false;
+        if (carNumber != null ? !carNumber.equals(driver.carNumber) : driver.carNumber != null) return false;
         if (fuelRate100 != null ? !fuelRate100.equals(driver.fuelRate100) : driver.fuelRate100 != null) return false;
 
         return true;

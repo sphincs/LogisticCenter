@@ -7,6 +7,10 @@ public enum Category {
     C,
     D,
     CE,
-    DE
+    DE;
+
+    public static Category getByIndex(int index) {
+        return values()[index];
+    }
 
 }
