@@ -8,7 +8,7 @@ public class Trip {
     private Driver driver;
     private String startPoint;
     private String endPoint;
-    private Integer distance;
+    private Double distance;
     private Date startDate;
     private Date endDate;
     private Double sumFuel;
@@ -16,7 +16,7 @@ public class Trip {
     public Trip() {
     }
 
-    public Trip(Long id, Driver driver, String startPoint, String endPoint, Integer distance, Date startDate, Date endDate) {
+    public Trip(Long id, Driver driver, String startPoint, String endPoint, Double distance, Date startDate, Date endDate) {
         this.id = id;
         this.driver = driver;
         this.startPoint = startPoint;
@@ -32,7 +32,7 @@ public class Trip {
         return id;
     }
 
-    public Integer getDistance() {
+    public Double getDistance() {
         return distance;
     }
 
@@ -64,7 +64,7 @@ public class Trip {
         this.id = id;
     }
 
-    public void setDistance(Integer distance) {
+    public void setDistance(Double distance) {
         this.distance = distance;
     }
 
@@ -86,6 +86,11 @@ public class Trip {
 
     public void setStartPoint(String startPoint) {
         this.startPoint = startPoint;
+    }
+
+    public void setSumFuel() {
+        if (this.distance > 0) this.sumFuel = (double) this.distance / 100 * this.driver.getFuelRate100();
+        else this.sumFuel = 0D;
     }
 
     @Override

@@ -77,6 +77,10 @@ public class Driver {
         this.carNumber = carNumber;
     }
 
+    public void setFuelRate100() {
+        this.fuelRate100 = car.getFuelRate();
+    }
+
     @Override
     public String toString() {
         String tempCategories = "";
