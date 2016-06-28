@@ -22,7 +22,7 @@ public class TestTrip extends Assert {
         Driver driver = new Driver(1L, "Vasili Ivanych", 48, categories, Car.FORD, "0013ih1");
         String startPoint = "Brest";
         String endPoint = "Minsk";
-        Integer distance = 340;
+        Double distance = 340d;
         Date startDate = format.parse("27.06.2016 12:43:15");
         Date endDate = format.parse("28.06.2016 12:43:15");
         Double sumFuel = 21.08;
@@ -47,9 +47,9 @@ public class TestTrip extends Assert {
         categories.add(Category.B);
         Driver driver = new Driver(1L, "Vasili Ivanych", 48, categories, Car.FORD, "0013ih1");
 
-        Trip trip1 = new Trip(1L, driver, "Brest", "Minsk", 340, format.parse("27.06.2016 12:43:15"), format.parse("28.06.2016 12:43:15"));
-        Trip trip2 = new Trip(1L, driver, "Brest", "Minsk", 340, format.parse("27.06.2016 12:43:15"), format.parse("28.06.2016 12:43:15"));
-        Trip trip3 = new Trip(1L, driver, "Brest", "Minsk", 340, format.parse("27.06.2016 12:43:20"), format.parse("28.06.2016 12:43:15"));
+        Trip trip1 = new Trip(1L, driver, "Brest", "Minsk", 340d, format.parse("27.06.2016 12:43:15"), format.parse("28.06.2016 12:43:15"));
+        Trip trip2 = new Trip(1L, driver, "Brest", "Minsk", 340d, format.parse("27.06.2016 12:43:15"), format.parse("28.06.2016 12:43:15"));
+        Trip trip3 = new Trip(1L, driver, "Brest", "Minsk", 340d, format.parse("27.06.2016 12:43:20"), format.parse("28.06.2016 12:43:15"));
 
         assertEquals(trip, trip);
         assertEquals(trip1, trip2);
