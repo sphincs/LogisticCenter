@@ -22,7 +22,8 @@ public class Driver {
         this.categories = categories;
         this.car = car;
         this.carNumber = carNumber;
-        this.fuelRate100 = car.getFuelRate();
+        if (car != null) this.fuelRate100 = car.getFuelRate();
+        else this.fuelRate100 = 0D;
     }
 
     public Integer getAge() {

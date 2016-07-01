@@ -24,8 +24,8 @@ public class Trip {
         this.distance = distance;
         this.startDate = startDate;
         this.endDate = endDate;
-        if (this.distance > 0) this.sumFuel = (double) this.distance / 100 * this.driver.getFuelRate100();
-        else this.sumFuel = 0D;
+        if (this.distance == null || this.distance <= 0 || this.driver == null) this.sumFuel = 0D;
+        else this.sumFuel = this.distance / 100 * this.driver.getFuelRate100();
     }
 
     public Long getId() {
