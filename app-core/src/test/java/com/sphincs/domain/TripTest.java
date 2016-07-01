@@ -15,7 +15,7 @@ public class TripTest {
     private SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 
     @Test
-    public void TestTripFields() throws ParseException {
+    public void TripFieldsTest() throws ParseException {
         Long id = 4L;
         Set<Category> categories = new HashSet<>();
         categories.add(Category.B);
@@ -39,7 +39,7 @@ public class TripTest {
     }
 
     @Test
-    public void TestTripEquals() throws ParseException {
+    public void TripEqualsTest() throws ParseException {
         trip = new Trip();
         Set<Category> categories = new HashSet<>();
         categories.add(Category.B);

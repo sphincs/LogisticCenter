@@ -11,7 +11,7 @@ public class DriverTest {
     Driver driver;
 
     @Test
-    public void TestDriverFields() {
+    public void DriverFieldsTest() {
         Long id = 4L;
         String name = "Vasili Ivanych";
         Integer age = 48;
@@ -33,7 +33,7 @@ public class DriverTest {
     }
 
     @Test
-    public void TetsDriverEquals() {
+    public void DriverEqualsTest() {
 
         driver = new Driver();
         Set<Category> categories1 = new HashSet<>();
