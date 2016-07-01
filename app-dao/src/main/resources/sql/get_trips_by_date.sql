@@ -1,0 +1,1 @@
+SELECT tripid, tripdriver, startpoint, endpoint, distance, startdate, enddate, sumfuel FROM TRIPS WHERE startdate = ? AND enddate = ?

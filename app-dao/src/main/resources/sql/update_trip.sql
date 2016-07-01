@@ -1,0 +1,1 @@
+UPDATE TRIPS SET tripdriver = :tripdriver, startpoint = :startpoint, endpoint = :endpoint, distance = :distance, startdate = :startdate, enddate = :enddate, sumfuel = :sumfuel WHERE tripid = :tripid

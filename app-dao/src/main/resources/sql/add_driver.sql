@@ -1,0 +1,1 @@
+INSERT INTO DRIVERS (drivername, age, category, car, carnumber, fuelrate) VALUES (:drivername, :age, :category, :car, :carnumber, :fuelrate)

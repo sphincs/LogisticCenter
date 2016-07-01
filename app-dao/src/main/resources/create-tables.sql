@@ -1,0 +1,20 @@
+CREATE TABLE DRIVERS (
+driverid BIGINT IDENTITY ,
+drivername VARCHAR(255) NOT NULL ,
+age INTEGER NOT NULL ,
+category VARCHAR(255) NOT NULL ,
+car INTEGER NOT NULL ,
+carnumber VARCHAR(255) NOT NULL ,
+fuelrate DOUBLE NOT NULL
+);
+
+CREATE TABLE TRIPS (
+tripid BIGINT IDENTITY ,
+tripdriver BIGINT NOT NULL ,
+startpoint VARCHAR(255) NOT NULL ,
+endpoint VARCHAR(255) NOT NULL ,
+distance DOUBLE NOT NULL ,
+startdate DATE NOT NULL ,
+enddate DATE NOT NULL ,
+sumfuel DOUBLE NOT NULL
+)

@@ -1,0 +1,1 @@
+INSERT INTO TRIPS (tripid, tripdriver, startpoint, endpoint, distance, startdate, enddate, sumfuel) VALUES (:tripid, :tripdriver, :startpoint, :endpoint, :distance, :startdate, :enddate, :sumfuel)
