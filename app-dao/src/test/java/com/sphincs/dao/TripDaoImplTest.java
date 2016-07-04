@@ -25,66 +25,65 @@ public class TripDaoImplTest extends AbstractTestNGSpringContextTests {
     private TripDao tripDao;
     @Autowired
     private DriverDao driverDao;
+
     private Driver driver;
-
-
-    @BeforeClass
-    public void setUp() throws Exception {
-        Set<Category> categories = new HashSet<>();
-        categories.add(Category.B);
-        driver = new Driver(null, "Rick", 25, categories, Car.FORD, "4444-ag1");
-        driverDao.addDriver(driver);
-        driver = driverDao.getDriverByName("Rick");
-    }
-
     private static final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 
+    @BeforeClass
+    public void setUp() {
+        Set<Category> categories = new HashSet<>();
+        categories.add(Category.B);
+        driver = new Driver(null, "David", 25, categories, Car.FORD, "4444-ag1");
+        driverDao.addDriver(driver);
+        driver = driverDao.getDriverByName("David");
+    }
+
     @Test
-    public void getAllTrips() {
+    public void getAllTripsTest() {
         List<Trip> trips = tripDao.getAllTrips();
         Assert.assertNotNull(trips);
         Assert.assertFalse(trips.isEmpty());
     }
 
-    @Test
-    public void removeTrip() throws ParseException {
+    @Test(priority = 2)
+    public void removeTripTest() throws ParseException {
         List<Trip> trips = tripDao.getAllTrips();
         int sizeBefore = trips.size();
-        tripDao.removeTrip(0L);
+        tripDao.removeTrip(1L);
         trips = tripDao.getAllTrips();
         Assert.assertEquals(sizeBefore, trips.size() + 1);
     }
 
     @Test
-    public void getTripById() {
+    public void getTripByIdTest() {
         Trip trip = tripDao.getTripById(0L);
         Assert.assertEquals(trip.getEndPoint(), "minsk");
         Assert.assertEquals(formatter.format(trip.getEndDate()), "2016-06-30");
     }
 
     @Test
-    public void getTripsByDriver() {
+    public void getTripsByDriverTest() {
         List<Trip> trips = tripDao.getTripsByDriver("Bobby");
         Assert.assertEquals(210, trips.get(0).getSumFuel(), 0.1);
         Assert.assertEquals("2016-06-30", formatter.format(trips.get(0).getStartDate()));
     }
 
     @Test
-    public void getTripsByRoute() {
+    public void getTripsByRouteTest() {
         List<Trip> trips = tripDao.getTripsByRoute("gomel", "rome");
         Assert.assertEquals(2530d, trips.get(0).getDistance());
         Assert.assertEquals("Spencer", trips.get(0).getDriver().getName());
     }
 
     @Test
-    public void getTripsByDate() throws ParseException {
+    public void getTripsByDateTest() throws ParseException {
         List<Trip> trips = tripDao.getTripsByDate(formatter.parse("2016-07-01"), formatter.parse("2016-07-03"));
         Assert.assertEquals(2530d, trips.get(0).getDistance());
         Assert.assertEquals("Spencer", trips.get(0).getDriver().getName());
     }
 
-    @Test
-    public void updateTrip() throws ParseException {
+    @Test(priority = 1)
+    public void updateTripTest() throws ParseException {
         Trip trip = new Trip(1L, driver, "london", "birminghem", 200D, formatter.parse("2016-06-15"), formatter.parse("2016-06-16"));
         tripDao.updateTrip(trip);
         trip = tripDao.getTripById(1L);
@@ -93,7 +92,7 @@ public class TripDaoImplTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    public void addTrip() throws ParseException {
+    public void addTripTest() throws ParseException {
         List<Trip> trips = tripDao.getAllTrips();
         int sizeBefore = trips.size();
         Trip trip = new Trip(null, driver, "london", "birminghem", 200d, formatter.parse("2016-06-15"), formatter.parse("2016-06-16"));
@@ -101,7 +100,6 @@ public class TripDaoImplTest extends AbstractTestNGSpringContextTests {
         trips = tripDao.getAllTrips();
         int sizeAfter = trips.size();
         Assert.assertEquals(sizeBefore, sizeAfter - 1);
-
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
@@ -133,6 +131,4 @@ public class TripDaoImplTest extends AbstractTestNGSpringContextTests {
     public void addTripWithNullEndDateTest() throws ParseException {
         tripDao.addTrip(new Trip(null, driver, "london", "birminghem", 200d, formatter.parse("2016-06-15"), null));
     }
-
-
 }
