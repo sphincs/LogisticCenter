@@ -86,7 +86,6 @@ public class DriverDaoImpl implements DriverDao {
         Assert.isTrue(driver.getFuelRate100() != 0D, "Fuel rate should be more than 0. Incorrect car");
 
         Map<String, Object> params = new HashMap<>(6);
-        //params.put(DRIVER_ID, driver.getId());
         params.put(NAME, driver.getName());
         params.put(AGE, driver.getAge());
         String categories = "";
