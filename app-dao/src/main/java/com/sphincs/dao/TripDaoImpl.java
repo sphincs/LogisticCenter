@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -68,6 +69,14 @@ public class TripDaoImpl implements TripDao {
 
     @Autowired
     private DriverDao driverDao;
+
+    public void setDataSource(DriverManagerDataSource dataSource) {
+        this.dataSource = dataSource;
+    }
+
+    public void setDriverDao(DriverDao driverDao) {
+        this.driverDao = driverDao;
+    }
 
     private JdbcTemplate jdbcTemplate;
     private NamedParameterJdbcTemplate namedJdbcTemplate;

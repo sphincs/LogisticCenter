@@ -11,11 +11,11 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.Assert;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
@@ -23,7 +23,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
-@Repository
+//@Repository
 public class DriverDaoImpl implements DriverDao {
 
     private static final Logger LOGGER = LogManager.getLogger();
@@ -36,7 +36,7 @@ public class DriverDaoImpl implements DriverDao {
     private static final String CAR_NUMBER = "carnumber";
     private static final String FUEL_RATE = "fuelrate";
 
-    //что это значит?
+
     @Value("#{T(org.apache.commons.io.IOUtils).toString((new org.springframework.core.io.ClassPathResource('${add_driver_path}')).inputStream)}")
     public String addDriver;
 
@@ -61,6 +61,10 @@ public class DriverDaoImpl implements DriverDao {
 
         @Autowired
         private DataSource dataSource;
+
+        public void setDataSource(DriverManagerDataSource dataSource) {
+            this.dataSource = dataSource;
+        }
 
         private JdbcTemplate jdbcTemplate;
         private NamedParameterJdbcTemplate namedJdbcTemplate;
@@ -161,7 +165,6 @@ public class DriverDaoImpl implements DriverDao {
 
         namedJdbcTemplate.update(updateDriver, params);
     }
-
 
     public class DriverMapper implements RowMapper<Driver> {
         @Override

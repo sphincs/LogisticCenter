@@ -26,6 +26,14 @@ public class TripDaoImplTest extends AbstractTestNGSpringContextTests {
     @Autowired
     private DriverDao driverDao;
 
+    public void setDriverDao(DriverDao driverDao) {
+        this.driverDao = driverDao;
+    }
+
+    public void setTripDao(TripDao tripDao) {
+        this.tripDao = tripDao;
+    }
+
     private Driver driver;
     private static final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 
