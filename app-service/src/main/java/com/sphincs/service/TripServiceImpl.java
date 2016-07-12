@@ -6,7 +6,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
@@ -14,17 +14,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-@Repository
+@Service
 public class TripServiceImpl implements TripService {
 
     public static final Logger LOGGER = LogManager.getLogger();
 
     @Autowired
     private TripDao tripDao;
-
-    public void setTripDao(TripDao tripDao) {
-        this.tripDao = tripDao;
-    }
 
     @Override
     public Long addTrip(Trip trip) {

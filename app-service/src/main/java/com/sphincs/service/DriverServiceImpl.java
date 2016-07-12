@@ -10,29 +10,22 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Repository
+@Service
 public class DriverServiceImpl implements DriverService {
 
     public static final Logger LOGGER = LogManager.getLogger();
     @Autowired
     private DriverDao driverDao;
+
     @Autowired
     private TripDao tripDao;
-
-    public void setDriverDao(DriverDao driverDao) {
-        this.driverDao = driverDao;
-    }
-
-    public void setTripDao(TripDao tripDao) {
-        this.tripDao = tripDao;
-    }
 
     @Override
     public Long addDriver(Driver driver) {
@@ -138,5 +131,4 @@ public class DriverServiceImpl implements DriverService {
             LOGGER.debug("updateDriver({}), Exception:{}",driver, e.toString());
         }
     }
-
 }

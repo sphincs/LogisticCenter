@@ -14,16 +14,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-
 @ContextConfiguration(locations = {"classpath:/spring-service-test.xml"})
 public class DriverServiceImplTest extends AbstractTestNGSpringContextTests{
 
     @Autowired
     private DriverService driverService;
-
-    public void setDriverService(DriverService driverService) {
-        this.driverService = driverService;
-    }
 
     Set<Category> categories = new HashSet<>();
 
@@ -88,6 +83,7 @@ public class DriverServiceImplTest extends AbstractTestNGSpringContextTests{
         drivers = driverService.getAllDrivers();
         Assert.assertEquals(sizeBefore, drivers.size() + 1);
     }
+
     @Test(priority = 3)
     public void removeDriverWithoutTripsTest() {
         List<Driver> drivers = driverService.getAllDrivers();
@@ -127,9 +123,4 @@ public class DriverServiceImplTest extends AbstractTestNGSpringContextTests{
         Assert.assertEquals(driver.getName(), "Rick");
         Assert.assertEquals(driver.getCarNumber(), "4444-ag1");
     }
-
-
-
-
-
 }

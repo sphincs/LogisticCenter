@@ -26,14 +26,6 @@ public class TripServiceImplTest extends AbstractTestNGSpringContextTests {
     @Autowired
     private DriverService driverService;
 
-    public void setDriverService(DriverService driverService) {
-        this.driverService = driverService;
-    }
-
-    public void setTripService(TripService tripService) {
-        this.tripService = tripService;
-    }
-
     private Driver driver;
     private static final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -140,11 +132,4 @@ public class TripServiceImplTest extends AbstractTestNGSpringContextTests {
     public void addTripWithNullEndDateTest() throws ParseException {
         tripService.addTrip(new Trip(null, driver, "london", "birminghem", 200d, formatter.parse("2016-06-15"), null));
     }
-
-
-
-
-
-
-
 }
