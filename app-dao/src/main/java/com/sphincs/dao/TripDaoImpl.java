@@ -9,10 +9,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
 import javax.annotation.PostConstruct;
@@ -25,7 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Repository
+@Component
 public class TripDaoImpl implements TripDao {
 
     private static final Logger LOGGER = LogManager.getLogger();
@@ -70,14 +69,6 @@ public class TripDaoImpl implements TripDao {
     @Autowired
     private DriverDao driverDao;
 
-    public void setDataSource(DriverManagerDataSource dataSource) {
-        this.dataSource = dataSource;
-    }
-
-    public void setDriverDao(DriverDao driverDao) {
-        this.driverDao = driverDao;
-    }
-
     private JdbcTemplate jdbcTemplate;
     private NamedParameterJdbcTemplate namedJdbcTemplate;
 
@@ -86,7 +77,6 @@ public class TripDaoImpl implements TripDao {
         jdbcTemplate = new JdbcTemplate(dataSource);
         namedJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
     }
-
 
     @Override
     public Long addTrip(Trip trip) {
@@ -175,8 +165,6 @@ public class TripDaoImpl implements TripDao {
         params.put(DISTANCE, trip.getDistance());
         params.put(START_DATE, trip.getStartDate());
         params.put(END_DATE, trip.getEndDate());
-        //params.put(START_DATE, formatter.format(trip.getStartDate()));
-        //params.put(END_DATE, formatter.format(trip.getEndDate()));
         params.put(SUM_FUEL, trip.getSumFuel());
 
         namedJdbcTemplate.update(updateTrip, params);
@@ -197,7 +185,4 @@ public class TripDaoImpl implements TripDao {
             return trip;
         }
     }
-
-
-
 }

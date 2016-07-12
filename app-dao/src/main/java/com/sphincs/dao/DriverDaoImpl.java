@@ -13,9 +13,8 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
@@ -23,7 +22,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
-//@Repository
+@Component
 public class DriverDaoImpl implements DriverDao {
 
     private static final Logger LOGGER = LogManager.getLogger();
@@ -59,22 +58,17 @@ public class DriverDaoImpl implements DriverDao {
     public String updateDriver;
 
 
-        @Autowired
-        private DataSource dataSource;
+    @Autowired
+    private DataSource dataSource;
 
-        public void setDataSource(DriverManagerDataSource dataSource) {
-            this.dataSource = dataSource;
-        }
+    private JdbcTemplate jdbcTemplate;
+    private NamedParameterJdbcTemplate namedJdbcTemplate;
 
-        private JdbcTemplate jdbcTemplate;
-        private NamedParameterJdbcTemplate namedJdbcTemplate;
-
-        @PostConstruct
-        public void init () {
-            jdbcTemplate = new JdbcTemplate(dataSource);
-            namedJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
-        }
-
+    @PostConstruct
+    public void init() {
+        jdbcTemplate = new JdbcTemplate(dataSource);
+        namedJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
+    }
 
     @Override
     public Long addDriver(Driver driver) {
@@ -185,6 +179,4 @@ public class DriverDaoImpl implements DriverDao {
             return driver;
         }
     }
-
-
 }

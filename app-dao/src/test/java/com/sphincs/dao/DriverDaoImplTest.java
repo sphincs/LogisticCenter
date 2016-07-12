@@ -1,6 +1,5 @@
 package com.sphincs.dao;
 
-
 import com.sphincs.domain.Car;
 import com.sphincs.domain.Category;
 import com.sphincs.domain.Driver;
@@ -115,5 +114,4 @@ public class DriverDaoImplTest extends AbstractTestNGSpringContextTests {
         driver = driverDao.getDriverById(0L);
         Assert.assertEquals(driver.getName(), "Rick");
     }
-
 }
