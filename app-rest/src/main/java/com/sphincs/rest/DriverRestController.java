@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import javax.annotation.Resource;
 import java.util.List;
 
 @Controller
@@ -17,7 +16,7 @@ public class DriverRestController {
 
     @Autowired
     private DriverService driverService;
-
+/*
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<Long> addDriver(@RequestBody Driver driver) {
@@ -26,7 +25,7 @@ public class DriverRestController {
     }
 
     @ResponseBody
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(value = "/all/", method = RequestMethod.GET)
     public ResponseEntity <List<Driver>> getAllDrivers() {
         List<Driver> drivers = driverService.getAllDrivers();
         return new ResponseEntity(drivers, HttpStatus.OK);
@@ -38,7 +37,7 @@ public class DriverRestController {
         driverService.removeDriver(id);
         return new ResponseEntity("", HttpStatus.OK);
     }
-
+*/
     @ResponseBody
     @RequestMapping(value = "/id/{id}", method = RequestMethod.GET)
     public ResponseEntity<Driver> getDriverById(@PathVariable Long id) {
@@ -62,9 +61,9 @@ public class DriverRestController {
                     + e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
-
+/*
     @ResponseBody
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(value = "/car/{/car}", method = RequestMethod.GET)
     public ResponseEntity<List<Driver>> getDriversByCar(Car car) {
         try {
             List<Driver> drivers = driverService.getDriversByCar(car);
@@ -76,13 +75,13 @@ public class DriverRestController {
     }
 
     @ResponseBody
-    @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity updateDriver(@RequestBody Driver driver) {
+    @RequestMapping(method = RequestMethod.PUT)
+    public ResponseEntity updateDriver(Driver driver) {
         driverService.updateDriver(driver);
         return new ResponseEntity("", HttpStatus.OK);
     }
 
-
+*/
 
 
 }

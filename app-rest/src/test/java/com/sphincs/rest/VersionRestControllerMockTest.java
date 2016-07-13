@@ -3,6 +3,7 @@ package com.sphincs.rest;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.springframework.test.web.servlet.MockMvc;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -14,7 +15,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import javax.annotation.Resource;
 
 @ContextConfiguration(locations = {"classpath*:/spring-rest-mock-test.xml"})
-public class VersionRestControllerMockTest {
+public class VersionRestControllerMockTest extends AbstractTestNGSpringContextTests{
 
     private MockMvc mockMvc;
 

@@ -30,11 +30,24 @@ public class DriverDataFixture {
         driver.setName("Ralph");
         driver.setAge(33);
         Set<Category> categories = new HashSet<>();
-        categories.add(Category.C);
         categories.add(Category.D);
         driver.setCategories(categories);
         driver.setCar(Car.DAF);
         driver.setCarNumber("1234-ab1");
+        driver.setFuelRate100();
+        return driver;
+    }
+
+    public static Driver getExistingDriverByName(String name) {
+        Driver driver = new Driver();
+        driver.setId(2L);
+        driver.setName(name);
+        driver.setAge(40);
+        Set<Category> categories = new HashSet<>();
+        categories.add(Category.B);
+        driver.setCategories(categories);
+        driver.setCar(Car.BMW);
+        driver.setCarNumber("9876-ab1");
         driver.setFuelRate100();
         return driver;
     }
