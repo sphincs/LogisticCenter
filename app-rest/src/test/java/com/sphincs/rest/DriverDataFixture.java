@@ -5,7 +5,9 @@ import com.sphincs.domain.Car;
 import com.sphincs.domain.Category;
 import com.sphincs.domain.Driver;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class DriverDataFixture {
@@ -50,5 +52,12 @@ public class DriverDataFixture {
         driver.setCarNumber("9876-ab1");
         driver.setFuelRate100();
         return driver;
+    }
+
+    public static List<Driver> getExistingDriversByCar(Car car) {
+        List<Driver> drivers = new ArrayList<>();
+        drivers.add(getExistingDriver(1L));
+        drivers.add(getExistingDriver(2L));
+        return drivers;
     }
 }

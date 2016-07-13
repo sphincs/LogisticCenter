@@ -61,7 +61,7 @@ public class DriverRestController {
                     + e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
-/*
+
     @ResponseBody
     @RequestMapping(value = "/car/{/car}", method = RequestMethod.GET)
     public ResponseEntity<List<Driver>> getDriversByCar(Car car) {
@@ -73,7 +73,7 @@ public class DriverRestController {
                     + e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
-
+/*
     @ResponseBody
     @RequestMapping(method = RequestMethod.PUT)
     public ResponseEntity updateDriver(Driver driver) {

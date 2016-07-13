@@ -1,6 +1,7 @@
 package com.sphincs.rest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.sphincs.domain.Car;
 import com.sphincs.domain.Driver;
 import com.sphincs.service.DriverService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +49,7 @@ public class DriverRestControllerMockTest extends AbstractTestNGSpringContextTes
     }
 
     @AfterClass
-    public void clean() throws Exception {
+    public void clean() {
         reset(driverService);
     }
 
@@ -83,6 +84,36 @@ public class DriverRestControllerMockTest extends AbstractTestNGSpringContextTes
     }
 
 
+    @Test
+    public void getDriversByCarTest() throws Exception {
+        Car car = Car.DAF;
+        expect(driverService.getDriversByCar(car))
+                .andReturn(DriverDataFixture.getExistingDriversByCar(car));
+        replay(driverService);
+        this.mockMvc.perform(
+                get("/drivers/car/" + car).accept(MediaType.APPLICATION_JSON)
+        )
+                .andDo(print())
+                .andExpect(status().isOk());
+                //.andExpect(content().string("{\"id\":2,\"name\":\"" + driverName + "\",\"age\":40,\"categories\":[\"B\"],\"car\":\"BMW\",\"carNumber\":\"9876-ab1\",\"fuelRate100\":7.5}"));
+        verify(driverService);
+    }
+
+/*
+    @Test(expectedExceptions = AssertionError.class)
+    public void getDriversByCarTest1() throws Exception {
+        Car car = Car.BMW;
+        expect(driverService.getDriversByCar(car))
+                .andReturn(DriverDataFixture.getExistingDriversByCar(car));
+        replay(driverService);
+        this.mockMvc.perform(
+                get("/drivers/car/" + car).accept(MediaType.APPLICATION_JSON)
+        )
+                .andDo(print())
+                .andExpect(status().isNotFound());
+        verify(driverService);
+    }
+*/
     /*
     @Test
     public void addDriverTest() throws Exception {
@@ -119,15 +150,6 @@ public class DriverRestControllerMockTest extends AbstractTestNGSpringContextTes
 
 
 
-    @Test
-    public void getDriverByNameTest() {
-
-    }
-
-    @Test
-    public void getDriversByCarTest() {
-
-    }
 
     @Test
     public void updateDriverTest() {
