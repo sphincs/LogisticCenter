@@ -16,12 +16,16 @@ public class DriverRestController {
 
     @Autowired
     private DriverService driverService;
-/*
+
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<Long> addDriver(@RequestBody Driver driver) {
-        Long id = driverService.addDriver(driver);
-        return new ResponseEntity(id, HttpStatus.CREATED);
+        try {
+            Long id = driverService.addDriver(driver);
+            return new ResponseEntity(id, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
+        }
     }
 
     @ResponseBody
@@ -30,7 +34,7 @@ public class DriverRestController {
         List<Driver> drivers = driverService.getAllDrivers();
         return new ResponseEntity(drivers, HttpStatus.OK);
     }
-
+/*
     @ResponseBody
     @RequestMapping(value = "/id/{/id}", method = RequestMethod.DELETE)
     public ResponseEntity removeDriver(@PathVariable Long id) {
@@ -38,15 +42,15 @@ public class DriverRestController {
         return new ResponseEntity("", HttpStatus.OK);
     }
 */
+
     @ResponseBody
     @RequestMapping(value = "/id/{id}", method = RequestMethod.GET)
     public ResponseEntity<Driver> getDriverById(@PathVariable Long id) {
-        try {
-            Driver driver = driverService.getDriverById(id);
+        Driver driver = driverService.getDriverById(id);
+        if (driver == null) {
+            return new ResponseEntity("Driver with id = " + id + " not found.", HttpStatus.NOT_FOUND);
+        } else {
             return new ResponseEntity(driver, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity("Driver with id = " + id + " not found. Error: "
-                            + e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -63,8 +67,8 @@ public class DriverRestController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/car/{/car}", method = RequestMethod.GET)
-    public ResponseEntity<List<Driver>> getDriversByCar(Car car) {
+    @RequestMapping(value = "/car/{car}", method = RequestMethod.GET)
+    public ResponseEntity<List<Driver>> getDriversByCar(@PathVariable Car car) {
         try {
             List<Driver> drivers = driverService.getDriversByCar(car);
             return new ResponseEntity<>(drivers, HttpStatus.OK);

@@ -10,10 +10,7 @@ import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.springframework.test.util.AssertionErrors;
 import org.springframework.test.web.servlet.MockMvc;
 import org.testng.TestException;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeTest;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 //import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.MediaType;
@@ -48,7 +45,7 @@ public class DriverRestControllerMockTest extends AbstractTestNGSpringContextTes
                 .setMessageConverters(new MappingJackson2HttpMessageConverter()).build();
     }
 
-    @AfterClass
+    @AfterMethod
     public void clean() {
         reset(driverService);
     }
@@ -65,6 +62,19 @@ public class DriverRestControllerMockTest extends AbstractTestNGSpringContextTes
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().string("{\"id\":" + driverId + ",\"name\":\"Ralph\",\"age\":33,\"categories\":[\"D\"],\"car\":\"DAF\",\"carNumber\":\"1234-ab1\",\"fuelRate100\":13.5}"));
+        verify(driverService);
+    }
+
+    @Test
+    public void getNotFoundDriverByIdTest() throws Exception{
+        expect(driverService.getDriverById(10L)).andReturn(null);
+        replay(driverService);
+
+        this.mockMvc.perform(
+                get("/drivers/id/10").accept(MediaType.APPLICATION_JSON)
+        )
+                .andDo(print())
+                .andExpect(status().isNotFound());
         verify(driverService);
     }
 
@@ -94,34 +104,32 @@ public class DriverRestControllerMockTest extends AbstractTestNGSpringContextTes
                 get("/drivers/car/" + car).accept(MediaType.APPLICATION_JSON)
         )
                 .andDo(print())
-                .andExpect(status().isOk());
-                //.andExpect(content().string("{\"id\":2,\"name\":\"" + driverName + "\",\"age\":40,\"categories\":[\"B\"],\"car\":\"BMW\",\"carNumber\":\"9876-ab1\",\"fuelRate100\":7.5}"));
+                .andExpect(status().isOk())
+                .andExpect(content().string("[{\"id\":1,\"name\":\"Ralph\",\"age\":33,\"categories\":[\"D\"],\"car\":\"DAF\",\"carNumber\":\"1234-ab1\",\"fuelRate100\":13.5},"
+                        + "{\"id\":2,\"name\":\"Ralph\",\"age\":33,\"categories\":[\"D\"],\"car\":\"DAF\",\"carNumber\":\"1234-ab1\",\"fuelRate100\":13.5}]"));
         verify(driverService);
     }
 
-/*
-    @Test(expectedExceptions = AssertionError.class)
-    public void getDriversByCarTest1() throws Exception {
-        Car car = Car.BMW;
-        expect(driverService.getDriversByCar(car))
-                .andReturn(DriverDataFixture.getExistingDriversByCar(car));
+    @Test
+    public void getAllDriversTest() throws Exception {
+        expect(driverService.getAllDrivers())
+                .andReturn(DriverDataFixture.getAllDrivers());
         replay(driverService);
         this.mockMvc.perform(
-                get("/drivers/car/" + car).accept(MediaType.APPLICATION_JSON)
+                get("/drivers/all/").accept(MediaType.APPLICATION_JSON)
         )
                 .andDo(print())
-                .andExpect(status().isNotFound());
+                .andExpect(status().isOk())
+                .andExpect(content().string("[{\"id\":1,\"name\":\"Ralph\",\"age\":33,\"categories\":[\"D\"],\"car\":\"DAF\",\"carNumber\":\"1234-ab1\",\"fuelRate100\":13.5},"
+                        + "{\"id\":2,\"name\":\"Mike\",\"age\":40,\"categories\":[\"B\"],\"car\":\"BMW\",\"carNumber\":\"9876-ab1\",\"fuelRate100\":7.5}]"));
         verify(driverService);
     }
-*/
-    /*
+
     @Test
     public void addDriverTest() throws Exception {
-        driverService.addDriver(anyObject(Driver.class));
-        expectLastCall().andReturn(1L);
-
+        expect(driverService.addDriver(DriverDataFixture.getNewDriver()))
+                .andReturn(1L);
         replay(driverService);
-
         ObjectMapper objectMapper = new ObjectMapper();
         String driverJson = objectMapper.writeValueAsString(DriverDataFixture.getNewDriver());
 
@@ -132,16 +140,12 @@ public class DriverRestControllerMockTest extends AbstractTestNGSpringContextTes
                     .accept(MediaType.APPLICATION_JSON)
                 )
                 .andDo(print())
-                .andExpect(status().isCreated())
-                .andExpect(content().string("1"));
-
+                .andExpect(status().isCreated());
+               // .andExpect(content().string("1"));
         verify(driverService);
-    }*/
-/*
-    @Test
-    public void getAllDriversTest() {
-
     }
+/*
+
 
     @Test
     public void removeDriverTest() {
