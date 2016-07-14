@@ -26,11 +26,10 @@ public class DriverDataFixture {
         return driver;
     }
 
-    public static Long addNewDriver() {
+    public static Driver getBadNewDriver() {
         Driver driver = new Driver();
-        driver.setId(1L);
         driver.setName("Ralph");
-        driver.setAge(33);
+        driver.setAge(null);
         Set<Category> categories = new HashSet<>();
         categories.add(Category.C);
         categories.add(Category.D);
@@ -38,7 +37,7 @@ public class DriverDataFixture {
         driver.setCar(Car.DAF);
         driver.setCarNumber("1234-ab1");
         driver.setFuelRate100();
-        return driver.getId();
+        return driver;
     }
 
     public static Driver getExistingDriver(Long id) {

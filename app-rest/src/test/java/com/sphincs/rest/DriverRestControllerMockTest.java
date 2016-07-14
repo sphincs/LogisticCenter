@@ -1,22 +1,16 @@
 package com.sphincs.rest;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.sphincs.domain.Car;
 import com.sphincs.domain.Driver;
 import com.sphincs.service.DriverService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
-import org.springframework.test.util.AssertionErrors;
 import org.springframework.test.web.servlet.MockMvc;
-import org.testng.TestException;
 import org.testng.annotations.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
-//import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import javax.annotation.Resource;
@@ -48,6 +42,80 @@ public class DriverRestControllerMockTest extends AbstractTestNGSpringContextTes
     @AfterMethod
     public void clean() {
         reset(driverService);
+    }
+
+    @Test
+    public void addDriverTest() throws Exception {
+        expect(driverService.addDriver(anyObject(Driver.class)))
+                .andReturn(1L);
+        replay(driverService);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String driverJson = objectMapper.writeValueAsString(DriverDataFixture.getNewDriver());
+
+        this.mockMvc.perform(
+                post("/drivers")
+                        .content(driverJson)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+        )
+                .andDo(print())
+                .andExpect(status().isCreated())
+                .andExpect(content().string("1"));
+        verify(driverService);
+    }
+
+    @Test
+    public void addBadDriverTest() throws Exception {
+        expect(driverService.addDriver(DriverDataFixture.getBadNewDriver()))
+                .andReturn(null);
+        replay(driverService);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String driverJson = objectMapper.writeValueAsString(DriverDataFixture.getBadNewDriver());
+
+        this.mockMvc.perform(
+                post("/drivers")
+                        .content(driverJson)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+        )
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+        verify(driverService);
+    }
+
+    @Test
+    public void addExistDriverTest() throws Exception {
+        expect(driverService.addDriver(anyObject(Driver.class)))
+                .andThrow(new IllegalArgumentException());
+        replay(driverService);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String driverJson = objectMapper.writeValueAsString(DriverDataFixture.getNewDriver());
+
+        this.mockMvc.perform(
+                post("/drivers")
+                        .content(driverJson)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+        )
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(""));
+        verify(driverService);
+    }
+
+    @Test
+    public void getAllDriversTest() throws Exception {
+        expect(driverService.getAllDrivers())
+                .andReturn(DriverDataFixture.getAllDrivers());
+        replay(driverService);
+        this.mockMvc.perform(
+                get("/drivers/all/").accept(MediaType.APPLICATION_JSON)
+        )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().string("[{\"id\":1,\"name\":\"Ralph\",\"age\":33,\"categories\":[\"D\"],\"car\":\"DAF\",\"carNumber\":\"1234-ab1\",\"fuelRate100\":13.5},"
+                        + "{\"id\":2,\"name\":\"Mike\",\"age\":40,\"categories\":[\"B\"],\"car\":\"BMW\",\"carNumber\":\"9876-ab1\",\"fuelRate100\":7.5}]"));
+        verify(driverService);
     }
 
     @Test
@@ -93,6 +161,20 @@ public class DriverRestControllerMockTest extends AbstractTestNGSpringContextTes
         verify(driverService);
     }
 
+    @Test
+    public void getNotFoundDriverByNameTest() throws Exception {
+        String driverName = "Mike";
+        expect(driverService.getDriverByName(driverName))
+                .andReturn(null);
+        replay(driverService);
+        this.mockMvc.perform(
+                get("/drivers/name/" + driverName).accept(MediaType.APPLICATION_JSON)
+        )
+                .andDo(print())
+                .andExpect(status().isNotFound());
+        verify(driverService);
+    }
+
 
     @Test
     public void getDriversByCarTest() throws Exception {
@@ -111,55 +193,50 @@ public class DriverRestControllerMockTest extends AbstractTestNGSpringContextTes
     }
 
     @Test
-    public void getAllDriversTest() throws Exception {
-        expect(driverService.getAllDrivers())
-                .andReturn(DriverDataFixture.getAllDrivers());
+    public void getNotFoundDriversByCarTest() throws Exception {
+        Car car = Car.LADA;
+        expect(driverService.getDriversByCar(car))
+                .andReturn(null);
         replay(driverService);
         this.mockMvc.perform(
-                get("/drivers/all/").accept(MediaType.APPLICATION_JSON)
+                get("/drivers/car/" + car).accept(MediaType.APPLICATION_JSON)
         )
                 .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().string("[{\"id\":1,\"name\":\"Ralph\",\"age\":33,\"categories\":[\"D\"],\"car\":\"DAF\",\"carNumber\":\"1234-ab1\",\"fuelRate100\":13.5},"
-                        + "{\"id\":2,\"name\":\"Mike\",\"age\":40,\"categories\":[\"B\"],\"car\":\"BMW\",\"carNumber\":\"9876-ab1\",\"fuelRate100\":7.5}]"));
+                .andExpect(status().isNotFound());
         verify(driverService);
     }
 
     @Test
-    public void addDriverTest() throws Exception {
-        expect(driverService.addDriver(DriverDataFixture.getNewDriver()))
-                .andReturn(1L);
+    public void removeDriverTest() throws Exception {
+        driverService.removeDriver(1L);
+        expectLastCall();
         replay(driverService);
-        ObjectMapper objectMapper = new ObjectMapper();
-        String driverJson = objectMapper.writeValueAsString(DriverDataFixture.getNewDriver());
-
-        this.mockMvc.perform(
-                post("/driver")
-                    .content(driverJson)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .accept(MediaType.APPLICATION_JSON)
-                )
-                .andDo(print())
-                .andExpect(status().isCreated());
-               // .andExpect(content().string("1"));
+        ResultActions result = this.mockMvc.perform(
+                delete("/drivers/1"))
+                .andDo(print());
+        result.andExpect(status().isOk());
         verify(driverService);
     }
-/*
-
 
     @Test
-    public void removeDriverTest() {
+    public void updateDriverTest() throws Exception {
+        driverService.updateDriver(anyObject(Driver.class));
+        expectLastCall();
+        replay(driverService);
 
+        ObjectMapper objectMapper = new ObjectMapper();
+        Driver driver = DriverDataFixture.getExistingDriver(1L);
+        driver.setAge(18);
+        String driverJson = objectMapper.writeValueAsString(driver);
+
+        ResultActions result = this.mockMvc.perform(
+                put("/drivers")
+                .content(driverJson)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+        )
+                .andDo(print());
+        result.andExpect(status().isOk());
+        verify(driverService);
     }
-
-
-
-
-    @Test
-    public void updateDriverTest() {
-
-    }
-
-*/
-
 }

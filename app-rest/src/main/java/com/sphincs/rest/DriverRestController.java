@@ -21,8 +21,11 @@ public class DriverRestController {
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<Long> addDriver(@RequestBody Driver driver) {
         try {
-            Long id = driverService.addDriver(driver);
-            return new ResponseEntity(id, HttpStatus.CREATED);
+            Long driverId = driverService.addDriver(driver);
+            if (driverId == null) {
+                return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
+            }
+            return new ResponseEntity(driverId, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
         }
@@ -34,14 +37,14 @@ public class DriverRestController {
         List<Driver> drivers = driverService.getAllDrivers();
         return new ResponseEntity(drivers, HttpStatus.OK);
     }
-/*
+
     @ResponseBody
-    @RequestMapping(value = "/id/{/id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public ResponseEntity removeDriver(@PathVariable Long id) {
         driverService.removeDriver(id);
         return new ResponseEntity("", HttpStatus.OK);
     }
-*/
+
 
     @ResponseBody
     @RequestMapping(value = "/id/{id}", method = RequestMethod.GET)
@@ -57,35 +60,33 @@ public class DriverRestController {
     @ResponseBody
     @RequestMapping(value = "/name/{name}", method = RequestMethod.GET)
     public ResponseEntity<Driver> getDriverByName(@PathVariable String name) {
-        try {
-            Driver driver = driverService.getDriverByName(name);
+        Driver driver = driverService.getDriverByName(name);
+        if (driver == null) {
+            return new ResponseEntity("Driver with name = " + name + " not found.", HttpStatus.NOT_FOUND);
+        } else {
             return new ResponseEntity(driver, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity("Driver with name = " + name + " not found. Error: "
-                    + e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
     @ResponseBody
     @RequestMapping(value = "/car/{car}", method = RequestMethod.GET)
     public ResponseEntity<List<Driver>> getDriversByCar(@PathVariable Car car) {
-        try {
-            List<Driver> drivers = driverService.getDriversByCar(car);
-            return new ResponseEntity<>(drivers, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity("Driver with car = " + car + " not found. Error: "
-                    + e.getMessage(), HttpStatus.NOT_FOUND);
+        List<Driver> drivers = driverService.getDriversByCar(car);
+        if (drivers == null) {
+            return new ResponseEntity("Drivers with car = " + car + " not found.", HttpStatus.NOT_FOUND);
+        } else {
+            return new ResponseEntity(drivers, HttpStatus.OK);
         }
     }
-/*
+
     @ResponseBody
     @RequestMapping(method = RequestMethod.PUT)
-    public ResponseEntity updateDriver(Driver driver) {
-        driverService.updateDriver(driver);
-        return new ResponseEntity("", HttpStatus.OK);
+    public ResponseEntity updateDriver(@RequestBody Driver driver) {
+        try {
+            driverService.updateDriver(driver);
+            return new ResponseEntity("", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
-
-*/
-
-
 }
