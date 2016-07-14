@@ -8,4 +8,4 @@ VALUES (0,'brest', 'minsk', 350, '2016-06-30', '2016-06-30', 46.92);
 INSERT INTO TRIPS (tripdriver, startpoint, endpoint, distance, startdate, enddate, sumfuel)
 VALUES (1,'moscow', 'astana', 2800, '2016-06-30', '2016-07-02', 210);
 INSERT INTO TRIPS (tripdriver, startpoint, endpoint, distance, startdate, enddate, sumfuel)
-VALUES (2,'gomel', 'rome', 2530, '2016-07-01', '2016-07-03', 341.55);
+VALUES (2,'gomel', 'rome', 2530, '2016-07-05', '2016-07-08', 341.55);
