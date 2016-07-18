@@ -223,7 +223,7 @@ public class TripRestControllerMockTest extends AbstractTestNGSpringContextTests
                 .andReturn(trips);
         replay(tripService);
         this.mockMvc.perform(
-                get("trips/date/"+startDate+"/"+endDate).accept(MediaType.APPLICATION_JSON)
+                get(String.format("/trips/date/%s/%s", startDate, endDate)).accept(MediaType.APPLICATION_JSON)
         )
                 .andDo(print())
                 .andExpect(status().isOk());

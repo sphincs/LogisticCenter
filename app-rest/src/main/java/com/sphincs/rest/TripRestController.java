@@ -99,7 +99,7 @@ public class TripRestController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/date/{startDate}/{endDate}", method = RequestMethod.GET)
+    @RequestMapping(value ="/date/{startDate}/{endDate}", method = RequestMethod.GET)
     public ResponseEntity<List<Trip>> getTripsByDate(
             @PathVariable String startDate,
             @PathVariable String endDate) throws ParseException {

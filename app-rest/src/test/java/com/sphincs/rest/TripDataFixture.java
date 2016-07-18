@@ -64,8 +64,8 @@ public class TripDataFixture {
 
     public static Trip getBadNewTrip() throws ParseException {
         Trip trip = new Trip();
-        trip.setDriver(null);
-        trip.setStartPoint("brest");
+        trip.setDriver(getDriver(1L));
+        trip.setStartPoint(null);
         trip.setEndPoint("minsk");
         trip.setDistance(350d);
         trip.setStartDate(formatter.parse("2016-07-14"));

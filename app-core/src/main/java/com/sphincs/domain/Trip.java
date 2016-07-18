@@ -89,7 +89,7 @@ public class Trip {
     }
 
     public void setSumFuel() {
-        if (this.distance > 0 && this.driver != null) this.sumFuel = (double) this.distance / 100 * this.driver.getFuelRate100();
+        if (this.distance > 0 && this.driver != null) this.sumFuel = this.distance / 100 * this.driver.getFuelRate100();
         else this.sumFuel = 0D;
     }
 
