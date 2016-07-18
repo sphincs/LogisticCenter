@@ -135,7 +135,7 @@ public class TripRestControllerMockTest extends AbstractTestNGSpringContextTests
         )
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().string("{\"id\":1,\"driver\":{\"id\":1,\"name\":\"Ralph\",\"age\":33,\"categories\":[\"D\"],\"car\":\"DAF\",\"carNumber\":\"1234-ab1\",\"fuelRate100\":13.5},\"startPoint\":\"brest\",\"endPoint\":\"minsk\",\"distance\":350.0,\"startDate\":1468443600000,\"endDate\":1468530000000,\"sumFuel\":47.25}"));
+                .andExpect(content().string("{\"id\":1,\"driver\":{\"id\":2,\"name\":\"Ralph\",\"age\":33,\"categories\":[\"D\"],\"car\":\"DAF\",\"carNumber\":\"1234-ab1\",\"fuelRate100\":13.5},\"startPoint\":\"gomel\",\"endPoint\":\"rome\",\"distance\":2530.0,\"startDate\":1467666000000,\"endDate\":1467925200000,\"sumFuel\":341.55}"));
         verify(tripService);
     }
 
@@ -215,8 +215,8 @@ public class TripRestControllerMockTest extends AbstractTestNGSpringContextTests
     @Test
     public void getTripsByDateTest() throws Exception {
         List<Trip> trips = TripDataFixture.getTripsByDate();
-        String startDate = "2016-07-14";
-        String endDate = "2016-07-15";
+        String startDate = "2016-07-05";
+        String endDate = "2016-07-08";
         Date start = formatter.parse(startDate);
         Date end = formatter.parse(endDate);
         expect(tripService.getTripsByDate(start, end))

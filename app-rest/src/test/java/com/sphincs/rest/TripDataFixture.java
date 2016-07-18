@@ -32,20 +32,20 @@ public class TripDataFixture {
     public static Trip getNewTripWithId(Long id) throws ParseException {
         Trip trip = new Trip();
         trip.setId(id);
-        trip.setDriver(getDriver(1L));
-        trip.setStartPoint("brest");
-        trip.setEndPoint("minsk");
-        trip.setDistance(350d);
-        trip.setStartDate(formatter.parse("2016-07-14"));
-        trip.setEndDate(formatter.parse("2016-07-15"));
+        trip.setDriver(getDriver(2L));
+        trip.setStartPoint("gomel");
+        trip.setEndPoint("rome");
+        trip.setDistance(2530d);
+        trip.setStartDate(formatter.parse("2016-07-05"));
+        trip.setEndDate(formatter.parse("2016-07-08"));
         trip.setSumFuel();
         return trip;
     }
 
     public static List<Trip> getTripsByDate() throws ParseException {
         List<Trip> trips = new ArrayList<>();
-        trips.add(getNewTripWithId(1L));
         trips.add(getNewTripWithId(2L));
+        //trips.add(getNewTripWithId(2L));
         return trips;
     }
 
