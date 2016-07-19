@@ -45,7 +45,7 @@ public class TripDataFixture {
     public static List<Trip> getTripsByDate() throws ParseException {
         List<Trip> trips = new ArrayList<>();
         trips.add(getNewTripWithId(2L));
-        //trips.add(getNewTripWithId(2L));
+        trips.add(getNewTripWithId(2L));
         return trips;
     }
 
