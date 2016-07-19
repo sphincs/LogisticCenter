@@ -77,7 +77,7 @@ public class TripDaoImplTest extends AbstractTestNGSpringContextTests {
 
     @Test
     public void getTripsByDateTest() throws ParseException {
-        List<Trip> trips = tripDao.getTripsByDate(formatter.parse("2016-07-01"), formatter.parse("2016-07-03"));
+        List<Trip> trips = tripDao.getTripsByDate(formatter.parse("2016-07-03"), formatter.parse("2016-07-08"));
         Assert.assertEquals(2530d, trips.get(0).getDistance());
         Assert.assertEquals("Spencer", trips.get(0).getDriver().getName());
     }

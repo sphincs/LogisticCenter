@@ -141,7 +141,7 @@ public class TripDaoImpl implements TripDao {
     @Override
     public List<Trip> getTripsByDate(Date startDate, Date endDate) {
         LOGGER.debug("getTripsByDate(from {} to {}) ", formatter.format(startDate), formatter.format(endDate));
-        return jdbcTemplate.query(getTripsByDate, new TripMapper(), new Date[]{startDate, endDate});
+        return jdbcTemplate.query(getTripsByDate, new TripMapper(), new Date[]{startDate, endDate, startDate, endDate});
     }
 
     @Override
