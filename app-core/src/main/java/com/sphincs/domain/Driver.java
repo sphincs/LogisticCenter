@@ -1,15 +1,85 @@
 package com.sphincs.domain;
 
+import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
+@Entity
+@Table(name = "DRIVERS")
 public class Driver {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "driverid")
     private Long id;
+
+    @Column(name = "drivername")
     private String name;
+
+    @Column(name = "age")
     private Integer age;
+
     private Set<Category> categories;
+
+    @Column(name = "category")
+    private String categoryDB;
+
+    private String getCategoryForDB() {
+        if (this.categories != null) {
+            StringBuilder sb = new StringBuilder();
+            for (Category current : this.categories) {
+                sb.append(current.ordinal()).append(", ");
+            }
+            String temp = sb.toString();
+            return temp.substring(0, temp.length() - 2);
+        } else throw new IllegalArgumentException();
+    }
+
+    public Set<Category> getCategoriesFromString(String stringCategories) {
+        stringCategories = stringCategories.substring(1, stringCategories.length() - 1);
+        String[] categoriesList = stringCategories.split(", ");
+        Set<Category> result = new HashSet<>();
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < Category.values().length; i++) {
+            sb.append(Category.getByIndex(i).toString()).append(',');
+        }
+        String category = sb.toString().substring(0, sb.toString().length() - 1);
+        for (int i = 0; i < categoriesList.length; i++) {
+            if (category.contains(categoriesList[i])) {
+                result.add(Category.valueOf(categoriesList[i]));
+            }
+        }
+        if (result.size() > 0) return result;
+        else return null;
+    }
+
     private Car car;
+
+    @Column(name = "car")
+    private Integer carDB;
+
+    private Integer getCarForDB() {
+        if (this.car != null) return this.car.ordinal();
+        else throw new IllegalArgumentException();
+    }
+
+    public Car getCarFromString(String stringCar) {
+        stringCar = stringCar.toUpperCase();
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < Car.values().length; i++) {
+            sb.append(Car.getByIndex(i).toString()).append(',');
+        }
+        String cars = sb.toString().substring(0, sb.toString().length() - 1);
+        if (cars.contains(stringCar)) {
+            return Car.valueOf(stringCar);
+        }
+        return null;
+    }
+
+    @Column(name = "carnumber")
     private String carNumber;
+
+    @Column(name = "fuelrate")
     private Double fuelRate100;
 
     public Driver() {
@@ -24,6 +94,8 @@ public class Driver {
         this.carNumber = carNumber;
         if (car != null) this.fuelRate100 = car.getFuelRate();
         else this.fuelRate100 = 0D;
+        this.carDB = getCarForDB();
+        this.categoryDB = getCategoryForDB();
     }
 
     public Integer getAge() {

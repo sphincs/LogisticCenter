@@ -54,6 +54,9 @@ public class DriverDaoImpl implements DriverDao {
     @Value("#{T(org.apache.commons.io.IOUtils).toString((new org.springframework.core.io.ClassPathResource('${get_drivers_by_car_path}')).inputStream)}")
     public String getDriversByCar;
 
+    @Value("#{T(org.apache.commons.io.IOUtils).toString((new org.springframework.core.io.ClassPathResource('${get_driver_by_car_number_path}')).inputStream)}")
+    public String getDriverByCarNumber;
+
     @Value("#{T(org.apache.commons.io.IOUtils).toString((new org.springframework.core.io.ClassPathResource('${update_driver_path}')).inputStream)}")
     public String updateDriver;
 
@@ -134,15 +137,22 @@ public class DriverDaoImpl implements DriverDao {
     }
 
     @Override
+    public Driver getDriverByCarNumber(String carNumber) {
+        LOGGER.debug("getDriverByCarNumber({}) ", carNumber);
+        return jdbcTemplate.queryForObject(getDriverByCarNumber, new DriverMapper(), carNumber);
+    }
+
+    @Override
     public void updateDriver(Driver driver) {
         LOGGER.debug("addDriver({}) ", driver);
         Assert.notNull(driver, "Driver should not be null");
-        Assert.notNull(driver.getId(),"Driver's id should be specified.");
+        Assert.notNull(driver.getId(), "Driver's id should be specified.");
         Assert.notNull(driver.getName(), "Driver's name should be specified.");
         Assert.notNull(driver.getAge(), "Driver's age should be specified.");
         Assert.notNull(driver.getCategories(), "Driver's categories should be specified.");
         Assert.notNull(driver.getCar(), "Driver's car should be specified.");
         Assert.notNull(driver.getCarNumber(), "Driver's car number should be specified.");
+
 
         Map<String, Object> params = new HashMap<>(7);
         params.put(DRIVER_ID, driver.getId());

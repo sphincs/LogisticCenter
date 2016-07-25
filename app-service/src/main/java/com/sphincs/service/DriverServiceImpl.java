@@ -101,6 +101,19 @@ public class DriverServiceImpl implements DriverService {
 
     @Override
     @Transactional
+    public Driver getDriverByCarNumber(String carNumber) {
+        LOGGER.debug("getDriverByNameCarNumber({}) ", carNumber);
+        Driver driver = null;
+        try {
+            driver = driverDao.getDriverByCarNumber(carNumber);
+        } catch (EmptyResultDataAccessException e) {
+            LOGGER.error("getDriverByNameCarNumber({}), Exception:{}", carNumber, e.toString());
+        }
+        return driver;
+    }
+
+    @Override
+    @Transactional
     public List<Driver> getDriversByCar(Car car) {
         LOGGER.debug("getDriversByCar({}) ", car);
         List<Driver> drivers = new ArrayList<>();
@@ -121,14 +134,14 @@ public class DriverServiceImpl implements DriverService {
         try {
             modifyDriver = driverDao.getDriverById(driver.getId());
         } catch (EmptyResultDataAccessException e) {
-            LOGGER.error("updateDriver({}): Exception:{}", driver, e.toString() );
+            LOGGER.error("updateDriver({}): Exception:{}", driver, e.toString());
             return;
         }
 
         try {
             driverDao.updateDriver(driver);
         } catch (EmptyResultDataAccessException e) {
-            LOGGER.debug("updateDriver({}), Exception:{}",driver, e.toString());
+            LOGGER.debug("updateDriver({}), Exception:{}", driver, e.toString());
         }
     }
 }

@@ -92,6 +92,13 @@ public class DriverDaoImplTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test
+    public void getDriverByCarNumberTest() {
+        Driver driver = driverDao.getDriverByCarNumber("3333-zz8");
+        Assert.assertEquals(driver.getName(), "Spencer");
+        Assert.assertEquals(driver.getAge(), (Object) 50);
+    }
+
+    @Test
     public void getDriversByCarTest() {
         List<Driver> driver = driverDao.getDriversByCar(Car.BMW);
         Assert.assertEquals(driver.size(), 1);

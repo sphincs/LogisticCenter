@@ -14,5 +14,6 @@ public interface DriverDao {
     Driver getDriverByName(String name);
     List<Driver> getDriversByCar(Car car);
     void updateDriver(Driver driver);
+    Driver getDriverByCarNumber(String carNumber);
 
 }

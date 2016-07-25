@@ -108,6 +108,13 @@ public class DriverServiceImplTest extends AbstractTestNGSpringContextTests{
     }
 
     @Test
+    public void getDriverByCarNumberTest() {
+        Driver driver = driverService.getDriverByCarNumber("5555-yy7");
+        Assert.assertEquals(driver.getAge(), (Object) 36);
+        Assert.assertEquals(driver.getCar(), Car.BMW);
+    }
+
+    @Test
     public void getDriversByCarTest() {
         List<Driver> drivers = driverService.getDriversByCar(Car.BMW);
         Assert.assertEquals(drivers.size(), 2);
