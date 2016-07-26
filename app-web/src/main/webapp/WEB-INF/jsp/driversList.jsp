@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <!-- Tell the JSP Page that please do not ignore Expression Language -->
 <%@ page isELIgnored="false"%>
 <!DOCTYPE html>
@@ -9,7 +10,7 @@
 
 <style type="text/css">
     TABLE {
-        width: 300px;
+
         border-collapse: collapse;
     }
     TD, TH {
@@ -22,19 +23,19 @@
 </style>
 
 <form:form method="get" modelAttribute="drivers">
-    <h1><spring:message code="drivers.list" /></h1>
+    <h1>Список водителей</h1>
     <ul>
         <table>
             <th>
-            <td>driverid</td>
-            <td>drivername</td>
-            <td>age</td>
-            <td>category</td>
-            <td>car</td>
-            <td>carnumber</td>
-            <td>fuelrate</td>
+            <td>ID</td>
+            <td>Имя</td>
+            <td>Возраст</td>
+            <td>Категории</td>
+            <td>Автомобиль</td>
+            <td>Номер автомобиля</td>
+            <td>Расход топлива</td>
             </th>
-            <c:forEach items="${driver}" var="driver">
+            <c:forEach items="${drivers}" var="driver">
                 <tr>
                     <td/>
                     <td>${driver.driverid}</td>
@@ -50,6 +51,6 @@
     </ul>
 </form:form>
 
-<a href='<spring:url value="/inputForm" />'> <spring:message code="driver.create" /></a>
+
 </body>
 </html>

@@ -31,18 +31,21 @@ public class DriverController {
     @RequestMapping("/")
     public String init() {
         return "hello";
+        //return "redirect:/driverslist";
     }
 
-/*
+
     @RequestMapping(value = "/driverslist")
     public ModelAndView getDriversListView() {
         List<Driver> drivers = driverService.getAllDrivers();
         LOGGER.debug("drivers.size = " + drivers.size());
-        ModelAndView view = new ModelAndView("driversList", "drivers", drivers);
+        //ModelAndView view = new ModelAndView("driversList", "drivers", drivers);
+        ModelAndView view = new ModelAndView("driversList");
+        view.addObject("drivers", drivers);
         return view;
     }
 
-*/
+
 
 
 
