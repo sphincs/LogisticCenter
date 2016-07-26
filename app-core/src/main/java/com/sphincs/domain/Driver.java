@@ -1,15 +1,54 @@
 package com.sphincs.domain;
 
+import javax.persistence.*;
 import java.util.Set;
 
+@Entity
+@Table(name = "DRIVERS")
 public class Driver {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "driverid")
     private Long id;
+
+    @Column(name = "drivername")
     private String name;
+
+    @Column(name = "age")
     private Integer age;
+
     private Set<Category> categories;
+
+    @Column(name = "category")
+    private String category;
+
+    private String getCategoryForDB() {
+        if (this.categories != null) {
+            StringBuilder sb = new StringBuilder();
+            for (Category current : this.categories) {
+                sb.append(current.ordinal()).append(", ");
+            }
+            String temp = sb.toString();
+            String s = temp.substring(0, temp.length() - 2);
+            return s;
+        } else throw new IllegalArgumentException();
+    }
+
     private Car car;
+
+    @Column(name = "car")
+    private Integer carDB;
+
+    private Integer getCarForDB() {
+        if (this.car != null) return this.car.ordinal();
+        else throw new IllegalArgumentException();
+    }
+
+    @Column(name = "carnumber")
     private String carNumber;
+
+    @Column(name = "fuelrate")
     private Double fuelRate100;
 
     public Driver() {
@@ -24,6 +63,8 @@ public class Driver {
         this.carNumber = carNumber;
         if (car != null) this.fuelRate100 = car.getFuelRate();
         else this.fuelRate100 = 0D;
+        this.carDB = getCarForDB();
+        this.category = getCategoryForDB();
     }
 
     public Integer getAge() {

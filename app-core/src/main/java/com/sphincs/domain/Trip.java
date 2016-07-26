@@ -1,16 +1,43 @@
 package com.sphincs.domain;
 
+import javax.persistence.*;
 import java.util.Date;
 
+@Entity
+@Table(name = "TRIPS")
 public class Trip {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "tripid")
     private Long id;
+
     private Driver driver;
+
+    @Column(name = "tripdriver")
+    private Long driverId;
+
+    private Long getDriverForDB() {
+        if (this.driver != null) return this.driver.getId();
+        else throw new IllegalArgumentException();
+    }
+
+    @Column(name = "startpoint")
     private String startPoint;
+
+    @Column(name = "endpoint")
     private String endPoint;
+
+    @Column(name = "distance")
     private Double distance;
+
+    @Column(name = "startdate")
     private Date startDate;
+
+    @Column(name = "enddate")
     private Date endDate;
+
+    @Column(name = "sumfuel")
     private Double sumFuel;
 
     public Trip() {
@@ -26,6 +53,7 @@ public class Trip {
         this.endDate = endDate;
         if (this.distance == null || this.distance <= 0 || this.driver == null) this.sumFuel = 0D;
         else this.sumFuel = this.distance / 100 * this.driver.getFuelRate100();
+        this.driverId = getDriverForDB();
     }
 
     public Long getId() {
