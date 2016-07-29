@@ -1,6 +1,7 @@
 package com.sphincs.domain;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -21,7 +22,7 @@ public class Driver {
     private Set<Category> categories;
 
     @Column(name = "category")
-    private String category;
+    private String categoryDB;
 
     private String getCategoryForDB() {
         if (this.categories != null) {
@@ -30,9 +31,25 @@ public class Driver {
                 sb.append(current.ordinal()).append(", ");
             }
             String temp = sb.toString();
-            String s = temp.substring(0, temp.length() - 2);
-            return s;
+            return temp.substring(0, temp.length() - 2);
         } else throw new IllegalArgumentException();
+    }
+
+    public Set<Category> getCategoriesFromString(String stringCategories) {
+        stringCategories = stringCategories.substring(1, stringCategories.length() - 1);
+        String[] categoriesList = stringCategories.split(", ");
+        Set<Category> result = new HashSet<>();
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < Category.values().length; i++) {
+            sb.append(Category.getByIndex(i).toString()).append(',');
+        }
+        String category = sb.toString().substring(0, sb.toString().length() - 1);
+        for (int i = 0; i < categoriesList.length; i++) {
+            if (category.contains(categoriesList[i])) {
+                result.add(Category.valueOf(categoriesList[i]));
+            }
+        }
+        return result;
     }
 
     private Car car;
@@ -64,7 +81,7 @@ public class Driver {
         if (car != null) this.fuelRate100 = car.getFuelRate();
         else this.fuelRate100 = 0D;
         this.carDB = getCarForDB();
-        this.category = getCategoryForDB();
+        this.categoryDB = getCategoryForDB();
     }
 
     public Integer getAge() {

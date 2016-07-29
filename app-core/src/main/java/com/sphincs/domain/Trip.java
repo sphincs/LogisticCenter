@@ -40,6 +40,16 @@ public class Trip {
     @Column(name = "sumfuel")
     private Double sumFuel;
 
+    private String sumFuelString = getSumFuelString(sumFuel);
+
+    public String getSumFuelString(Double sumFuel) {
+        String tempString = String.valueOf(sumFuel);
+        if (tempString.indexOf('.') + 2 < tempString.length())
+            this.sumFuelString = tempString.substring(0, tempString.indexOf('.') + 3);
+        else this.sumFuelString = tempString;
+        return this.sumFuelString;
+    }
+
     public Trip() {
     }
 
