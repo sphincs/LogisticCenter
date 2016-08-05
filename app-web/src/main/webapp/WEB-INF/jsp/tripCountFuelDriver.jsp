@@ -10,8 +10,8 @@
 <form action="/trips/tripCountFuelDriver" method="get">
     <table border="0">
         <tr>
-            <td><label path="driver"><spring:message code="trips.driver"/></label></td>
-            <td><input type="text" name="DriverName" autofocus/><br/></td>
+            <td><label path="driver"><spring:message code="driver.id"/></label></td>
+            <td><input type="text" name="DriverId" autofocus/><br/></td>
         </tr>
         <tr>
             <td><input type="submit" name="Submit" value=<spring:message code="button.trip.count"/>></td>
@@ -25,7 +25,7 @@
 
         <c:forEach var="driver" items="${drivers}">
             <tr>
-                <td width="200"/>
+                <td width="200">${driver.id}</td>
                 <td width="200">${driver.name}</td>
             </tr>
         </c:forEach>

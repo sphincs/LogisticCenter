@@ -49,7 +49,8 @@ public class Driver {
                 result.add(Category.valueOf(categoriesList[i]));
             }
         }
-        return result;
+        if (result.size() > 0) return result;
+        else return null;
     }
 
     private Car car;
@@ -60,6 +61,19 @@ public class Driver {
     private Integer getCarForDB() {
         if (this.car != null) return this.car.ordinal();
         else throw new IllegalArgumentException();
+    }
+
+    public Car getCarFromString(String stringCar) {
+        stringCar = stringCar.toUpperCase();
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < Car.values().length; i++) {
+            sb.append(Car.getByIndex(i).toString()).append(',');
+        }
+        String cars = sb.toString().substring(0, sb.toString().length() - 1);
+        if (cars.contains(stringCar)) {
+            return Car.valueOf(stringCar);
+        }
+        return null;
     }
 
     @Column(name = "carnumber")

@@ -10,8 +10,8 @@
 <body>
 <button onclick="history.back()">Back to Previous Page</button>
 
-<p><b>Date:</b> ${datetime}</p>
-<p><b>Error code:</b> ${exception}</p>
-<p><b>Request URI:</b> ${url}</p><br/>
+<p><b>Date:</b> ${errorMap.datetime}</p>
+<p><b>Error code:</b> ${errorMap.exception}</p>
+<p><b>Request URI:</b> ${errorMap.url}</p><br/>
 </body>
 </html>

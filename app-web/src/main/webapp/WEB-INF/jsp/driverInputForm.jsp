@@ -17,7 +17,7 @@
         </tr>
         <tr>
             <td><label path="categories"><spring:message code="driver.category"/>:</label></td>
-            <td><input type="text" name="Category"/><br/></td>
+            <td><input type="text" name="Category" value="[]"/><br/></td>
             <td><spring:message code="driver.category.format"/></td>
         </tr>
         <tr>
