@@ -1,9 +1,9 @@
 INSERT INTO DRIVERS (drivername, age, category, car, carnumber, fuelrate) VALUES ('Mike', 35, '1 2', 5, '1111-ab1', 13.8);
 INSERT INTO DRIVERS (drivername, age, category, car, carnumber, fuelrate) VALUES ('Bobby', 42, '1 2 3', 2, '2222-mn2', 7.5);
 INSERT INTO DRIVERS (drivername, age, category, car, carnumber, fuelrate) VALUES ('Spencer', 50, '3 4', 10, '3333-zz8', 13.5);
-INSERT INTO DRIVERS (drivername, age, category, car, carnumber, fuelrate) VALUES ('Misha', 36, '2', 3, '5555-yy7', 7.2);
+INSERT INTO DRIVERS (drivername, age, category, car, carnumber, fuelrate) VALUES ('Misha', 36, '2', 2, '5555-yy7', 7.2);
 INSERT INTO DRIVERS (drivername, age, category, car, carnumber, fuelrate) VALUES ('Rob', 36, '1 2', 0, '6666-yy7', 5.5);
-INSERT INTO DRIVERS (drivername, age, category, car, carnumber, fuelrate) VALUES ('Boris', 36, '2 4', 1, '7777-yy7', 6.8);
+INSERT INTO DRIVERS (drivername, age, category, car, carnumber, fuelrate) VALUES ('Boris', 36, '2 4', 1, '6666-yy7', 6.8);
 
 
 INSERT INTO TRIPS (tripdriver, startpoint, endpoint, distance, startdate, enddate, sumfuel)
