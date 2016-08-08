@@ -15,7 +15,10 @@ public class TripTest {
     @Test
     public void TripFieldsTest() throws ParseException {
         Long id = 4L;
-        Driver driver = new Driver(1L, "Vasili Ivanych", 48, "FORD", "2222-AB2", 7.0);
+        Driver driver = new Driver(1L, "Vasili Ivanych", 48);
+        String driverName = driver.getName();
+        String car = "FORD";
+        Double fuelRate100 = 7.0d;
         String startPoint = "Brest";
         String endPoint = "Minsk";
         String distance = "340";
@@ -23,9 +26,11 @@ public class TripTest {
         Date endDate = format.parse("2016-06-28");
         Double sumFuel = 23.8;
 
-        trip = new Trip(id, driver, startPoint, endPoint, distance, startDate, endDate);
+        trip = new Trip(id, driverName, car, fuelRate100, startPoint, endPoint, distance, startDate, endDate);
         Assert.assertEquals(id, trip.getId());
         Assert.assertEquals("Vasili Ivanych", trip.getDriverName());
+        Assert.assertEquals(car, trip.getCar());
+        Assert.assertEquals(fuelRate100, trip.getFuelRate100());
         Assert.assertEquals(startPoint, trip.getStartPoint());
         Assert.assertEquals(endPoint, trip.getEndPoint());
         Assert.assertEquals(distance, trip.getDistance());
@@ -37,11 +42,11 @@ public class TripTest {
     @Test
     public void TripEqualsTest() throws ParseException {
         trip = new Trip();
-        Driver driver = new Driver(1L, "Vasili Ivanych", 48, "FORD", "2222-AB2", 7.0);
+        Driver driver = new Driver(1L, "Vasili Ivanych", 48);
 
-        Trip trip1 = new Trip(1L, driver, "Brest", "Minsk", "340", format.parse("2016-06-27"), format.parse("2016-06-28"));
-        Trip trip2 = new Trip(1L, driver, "Brest", "Minsk", "340", format.parse("2016-06-27"), format.parse("2016-06-28"));
-        Trip trip3 = new Trip(1L, driver, "Brest", "Minsk", "340", format.parse("2016-06-28"), format.parse("2016-06-28"));
+        Trip trip1 = new Trip(1L, driver.getName(), "FORD", 7.0, "Brest", "Minsk", "340", format.parse("2016-06-27"), format.parse("2016-06-28"));
+        Trip trip2 = new Trip(1L, driver.getName(), "FORD", 7.0, "Brest", "Minsk", "340", format.parse("2016-06-27"), format.parse("2016-06-28"));
+        Trip trip3 = new Trip(1L, driver.getName(), "FORD", 7.0, "Brest", "Minsk", "340", format.parse("2016-06-28"), format.parse("2016-06-28"));
 
         Assert.assertEquals(trip, trip);
         Assert.assertEquals(trip1, trip2);
@@ -50,4 +55,5 @@ public class TripTest {
         Assert.assertFalse(trip3.equals(trip2));
         Assert.assertFalse(trip1.equals(trip3));
     }
+
 }

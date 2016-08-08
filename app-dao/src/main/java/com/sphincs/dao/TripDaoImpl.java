@@ -30,6 +30,8 @@ public class TripDaoImpl implements TripDao {
     private static final Logger LOGGER = LogManager.getLogger();
     private static final String TRIP_ID = "tripid";
     private static final String DRIVER = "tripdriver";
+    private static final String CAR = "car";
+    private static final String FUEL_RATE = "fuelrate";
     private static final String START_POINT = "startpoint";
     private static final String END_POINT = "endpoint";
     private static final String DISTANCE = "distance";
@@ -38,6 +40,7 @@ public class TripDaoImpl implements TripDao {
     private static final String SUM_FUEL = "sumfuel";
 
     private static final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+
 
     @Value("#{T(org.apache.commons.io.IOUtils).toString((new org.springframework.core.io.ClassPathResource('${add_trip_path}')).inputStream)}")
     public String addTrip;
@@ -54,6 +57,9 @@ public class TripDaoImpl implements TripDao {
     @Value("#{T(org.apache.commons.io.IOUtils).toString((new org.springframework.core.io.ClassPathResource('${get_trips_by_driver_path}')).inputStream)}")
     public String getTripsByDriver;
 
+    @Value("#{T(org.apache.commons.io.IOUtils).toString((new org.springframework.core.io.ClassPathResource('${get_trips_by_car_path}')).inputStream)}")
+    public String getTripsByCar;
+
     @Value("#{T(org.apache.commons.io.IOUtils).toString((new org.springframework.core.io.ClassPathResource('${get_trips_by_route_path}')).inputStream)}")
     public String getTripsByRoute;
 
@@ -62,6 +68,7 @@ public class TripDaoImpl implements TripDao {
 
     @Value("#{T(org.apache.commons.io.IOUtils).toString((new org.springframework.core.io.ClassPathResource('${update_trip_path}')).inputStream)}")
     public String updateTrip;
+
 
     @Autowired
     private DataSource dataSource;
@@ -83,18 +90,30 @@ public class TripDaoImpl implements TripDao {
         LOGGER.debug("addTrip({}) ", trip);
         Assert.notNull(trip);
         Assert.isNull(trip.getId());
-        Assert.notNull(trip.getDriver(), "Trip's driver should be specified.");
+        Assert.notNull(trip.getDriverName(), "Trip's driver should be specified.");
+        Assert.isTrue(!trip.getDriverName().equals(""), "Trip's driver should be specified.");
+        Assert.notNull(trip.getCar(), "Driver's car should be specified.");
+        Assert.isTrue(!trip.getCar().equals(""), "Driver's car should be specified.");
+        Assert.notNull(trip.getFuelRate100(), "Fuel rate should be specified.");
+        Assert.isTrue(trip.getFuelRate100() > 0D, "Fuel rate should be more than 0. Incorrect car");
         Assert.notNull(trip.getStartPoint(), "Trip's startPoint should be specified.");
+        Assert.isTrue(!trip.getStartPoint().equals(""), "Trip's startPoint should be specified.");
         Assert.notNull(trip.getEndPoint(), "Trip's endPoint should be specified.");
+        Assert.isTrue(!trip.getEndPoint().equals(""), "Trip's endPoint should be specified.");
         Assert.notNull(trip.getDistance(), "Trip's distance should be specified.");
-        Assert.isTrue(trip.getDistance() > 0, "Trip's distance should be more than 0 km.");
+        Assert.isTrue(!trip.getDistance().equals(""), "Trip's distance should be specified.");
+        Assert.isTrue(Double.parseDouble(trip.getDistance()) > 0, "Trip's distance should be more than 0 km.");
         Assert.notNull(trip.getStartDate(), "Trip's startDate should be specified.");
+        Assert.isTrue(!trip.getStartDate().equals(""), "Trip's startDate should be specified.");
         Assert.notNull(trip.getEndDate(), "Trip's endDate should be specified.");
+        Assert.isTrue(!trip.getEndDate().equals(""), "Trip's endDate should be specified.");
         Assert.notNull(trip.getSumFuel(), "Trip's summary fuel rate should be specified.");
+        Assert.isTrue(!trip.getSumFuel().equals(""), "Trip's summary fuel rate should be specified.");
 
         Map<String, Object> params = new HashMap<>(8);
-        params.put(TRIP_ID, trip.getId());
-        params.put(DRIVER, trip.getDriver().getId());
+        params.put(DRIVER, trip.getDriverName());
+        params.put(CAR, trip.getCar());
+        params.put(FUEL_RATE, trip.getFuelRate100());
         params.put(START_POINT, trip.getStartPoint());
         params.put(END_POINT, trip.getEndPoint());
         params.put(DISTANCE, trip.getDistance());
@@ -129,7 +148,13 @@ public class TripDaoImpl implements TripDao {
     @Override
     public List<Trip> getTripsByDriver(String name) {
         LOGGER.debug("getTripsByDriver({}) ", name);
-        return jdbcTemplate.query(getTripsByDriver, new TripMapper(), driverDao.getDriverByName(name).getId());
+        return jdbcTemplate.query(getTripsByDriver, new TripMapper(), name);
+    }
+
+    @Override
+    public List<Trip> getTripsByCar(String car) {
+        LOGGER.debug("getTripsByDriver({}) ", car);
+        return jdbcTemplate.query(getTripsByCar, new TripMapper(), car);
     }
 
     @Override
@@ -147,19 +172,32 @@ public class TripDaoImpl implements TripDao {
     @Override
     public void updateTrip(Trip trip) {
         LOGGER.debug("updateTrip({}) ", trip);
-        Assert.notNull(trip, "Trip should not be null");
-        Assert.notNull(trip.getId(), "Trip's id should not be null");
-        Assert.notNull(trip.getDriver(), "Trip's driver should be specified.");
+        Assert.notNull(trip);
+        Assert.notNull(trip.getId());
+        Assert.notNull(trip.getDriverName(), "Trip's driver should be specified.");
+        Assert.isTrue(!trip.getDriverName().equals(""), "Trip's driver should be specified.");
+        Assert.notNull(trip.getCar(), "Driver's car should be specified.");
+        Assert.isTrue(!trip.getCar().equals(""), "Driver's car should be specified.");
+        Assert.isTrue(trip.getFuelRate100() > 0D, "Fuel rate should be more than 0. Incorrect car");
         Assert.notNull(trip.getStartPoint(), "Trip's startPoint should be specified.");
+        Assert.isTrue(!trip.getStartPoint().equals(""), "Trip's startPoint should be specified.");
         Assert.notNull(trip.getEndPoint(), "Trip's endPoint should be specified.");
+        Assert.isTrue(!trip.getEndPoint().equals(""), "Trip's endPoint should be specified.");
         Assert.notNull(trip.getDistance(), "Trip's distance should be specified.");
+        Assert.isTrue(!trip.getDistance().equals(""), "Trip's distance should be specified.");
+        Assert.isTrue(Double.parseDouble(trip.getDistance()) > 0, "Trip's distance should be more than 0 km.");
         Assert.notNull(trip.getStartDate(), "Trip's startDate should be specified.");
+        Assert.isTrue(!trip.getStartDate().equals(""), "Trip's startDate should be specified.");
         Assert.notNull(trip.getEndDate(), "Trip's endDate should be specified.");
+        Assert.isTrue(!trip.getEndDate().equals(""), "Trip's endDate should be specified.");
         Assert.notNull(trip.getSumFuel(), "Trip's summary fuel rate should be specified.");
+        Assert.isTrue(!trip.getSumFuel().equals(""), "Trip's summary fuel rate should be specified.");
 
         Map<String, Object> params = new HashMap<>(8);
         params.put(TRIP_ID, trip.getId());
-        params.put(DRIVER, trip.getDriver().getId());
+        params.put(DRIVER, trip.getDriverName());
+        params.put(CAR, trip.getCar());
+        params.put(FUEL_RATE, trip.getFuelRate100());
         params.put(START_POINT, trip.getStartPoint());
         params.put(END_POINT, trip.getEndPoint());
         params.put(DISTANCE, trip.getDistance());
@@ -175,14 +213,17 @@ public class TripDaoImpl implements TripDao {
         public Trip mapRow(ResultSet resultSet, int i) throws SQLException {
             Trip trip = new Trip();
             trip.setId(resultSet.getLong(TRIP_ID));
-            trip.setDriver(driverDao.getDriverById(resultSet.getLong(DRIVER)));//new DriverDaoImpl().getDriverById(resultSet.getLong(DRIVER)));
+            trip.setDriverName(resultSet.getString(DRIVER));
+            trip.setCar(resultSet.getString(CAR));
+            trip.setFuelRate100(resultSet.getDouble(FUEL_RATE));
             trip.setStartPoint(resultSet.getString(START_POINT));
             trip.setEndPoint(resultSet.getString(END_POINT));
-            trip.setDistance(resultSet.getDouble(DISTANCE));
+            trip.setDistance(resultSet.getString(DISTANCE));
             trip.setStartDate(resultSet.getDate(START_DATE));
             trip.setEndDate(resultSet.getDate(END_DATE));
             trip.setSumFuel();
             return trip;
         }
     }
+
 }

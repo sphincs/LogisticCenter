@@ -1,7 +1,5 @@
 package com.sphincs.dao;
 
-import com.sphincs.domain.Car;
-import com.sphincs.domain.Category;
 import com.sphincs.domain.Driver;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,7 +18,9 @@ import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Component
 public class DriverDaoImpl implements DriverDao {
@@ -30,7 +30,6 @@ public class DriverDaoImpl implements DriverDao {
     private static final String DRIVER_ID = "driverid";
     private static final String NAME = "drivername";
     private static final String AGE = "age";
-    private static final String CATEGORY = "category";
     private static final String CAR = "car";
     private static final String CAR_NUMBER = "carnumber";
     private static final String FUEL_RATE = "fuelrate";
@@ -50,12 +49,6 @@ public class DriverDaoImpl implements DriverDao {
 
     @Value("#{T(org.apache.commons.io.IOUtils).toString((new org.springframework.core.io.ClassPathResource('${get_driver_by_name_path}')).inputStream)}")
     public String getDriverByName;
-
-    @Value("#{T(org.apache.commons.io.IOUtils).toString((new org.springframework.core.io.ClassPathResource('${get_drivers_by_car_path}')).inputStream)}")
-    public String getDriversByCar;
-
-    @Value("#{T(org.apache.commons.io.IOUtils).toString((new org.springframework.core.io.ClassPathResource('${get_driver_by_car_number_path}')).inputStream)}")
-    public String getDriverByCarNumber;
 
     @Value("#{T(org.apache.commons.io.IOUtils).toString((new org.springframework.core.io.ClassPathResource('${update_driver_path}')).inputStream)}")
     public String updateDriver;
@@ -79,24 +72,13 @@ public class DriverDaoImpl implements DriverDao {
         Assert.notNull(driver);
         Assert.isNull(driver.getId());
         Assert.notNull(driver.getName(), "Driver's name should be specified.");
+        Assert.isTrue(!driver.getName().equals(""), "Driver's name should be specified.");
         Assert.notNull(driver.getAge(), "Driver's age should be specified.");
-        Assert.isTrue(driver.getAge() > 18, "Driver's age should be more than 18 years old.");
-        Assert.notNull(driver.getCategories(), "Driver's categories should be specified.");
-        Assert.notNull(driver.getCar(), "Driver's car should be specified.");
-        Assert.notNull(driver.getCarNumber(), "Driver's car number should be specified.");
-        Assert.isTrue(driver.getFuelRate100() != 0D, "Fuel rate should be more than 0. Incorrect car");
+        Assert.isTrue(driver.getAge() >= 18, "Driver's age should be no less than 18 years old.");
 
         Map<String, Object> params = new HashMap<>(6);
         params.put(NAME, driver.getName());
         params.put(AGE, driver.getAge());
-        String categories = "";
-        for (Category current : driver.getCategories()) {
-            categories += current.ordinal() + " ";
-        }
-        params.put(CATEGORY, categories.trim());
-        params.put(CAR, driver.getCar().ordinal());
-        params.put(CAR_NUMBER, driver.getCarNumber());
-        params.put(FUEL_RATE, driver.getFuelRate100());
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         namedJdbcTemplate.update(addDriver, new MapSqlParameterSource(params), keyHolder);
@@ -130,42 +112,19 @@ public class DriverDaoImpl implements DriverDao {
     }
 
     @Override
-    public List<Driver> getDriversByCar(Car car) {
-        LOGGER.debug("getDriversByCar({}) ", car);
-        Integer carIndex = car.ordinal();
-        return jdbcTemplate.query(getDriversByCar, new DriverMapper(), carIndex);
-    }
-
-    @Override
-    public Driver getDriverByCarNumber(String carNumber) {
-        LOGGER.debug("getDriverByCarNumber({}) ", carNumber);
-        return jdbcTemplate.queryForObject(getDriverByCarNumber, new DriverMapper(), carNumber);
-    }
-
-    @Override
     public void updateDriver(Driver driver) {
         LOGGER.debug("addDriver({}) ", driver);
         Assert.notNull(driver, "Driver should not be null");
         Assert.notNull(driver.getId(), "Driver's id should be specified.");
         Assert.notNull(driver.getName(), "Driver's name should be specified.");
+        Assert.isTrue(!driver.getName().equals(""), "Driver's name should be specified.");
         Assert.notNull(driver.getAge(), "Driver's age should be specified.");
-        Assert.notNull(driver.getCategories(), "Driver's categories should be specified.");
-        Assert.notNull(driver.getCar(), "Driver's car should be specified.");
-        Assert.notNull(driver.getCarNumber(), "Driver's car number should be specified.");
-
+        Assert.isTrue(driver.getAge() >= 18, "Driver's age should be no less than 18 years old.");
 
         Map<String, Object> params = new HashMap<>(7);
         params.put(DRIVER_ID, driver.getId());
         params.put(NAME, driver.getName());
         params.put(AGE, driver.getAge());
-        String categories = "";
-        for (Category current : driver.getCategories()) {
-            categories += current.ordinal() + " ";
-        }
-        params.put(CATEGORY, categories.trim());
-        params.put(CAR, driver.getCar().ordinal());
-        params.put(CAR_NUMBER, driver.getCarNumber());
-        params.put(FUEL_RATE, driver.getFuelRate100());
 
         namedJdbcTemplate.update(updateDriver, params);
     }
@@ -177,16 +136,8 @@ public class DriverDaoImpl implements DriverDao {
             driver.setId(resultSet.getLong(DRIVER_ID));
             driver.setName(resultSet.getString(NAME));
             driver.setAge(resultSet.getInt(AGE));
-            String[] categoryArray = resultSet.getString(CATEGORY).split(" ");
-            Set<Category> categorySet = new HashSet<>();
-            for (int j = 0; j < categoryArray.length; j++) {
-                categorySet.add(Category.getByIndex(Integer.parseInt(categoryArray[j])));
-            }
-            driver.setCategories(categorySet);
-            driver.setCar(Car.getByIndex(resultSet.getInt(CAR)));
-            driver.setCarNumber(resultSet.getString(CAR_NUMBER));
-            driver.setFuelRate100();
             return driver;
         }
     }
+
 }

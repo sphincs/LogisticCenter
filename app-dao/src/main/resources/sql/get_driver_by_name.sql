@@ -1,1 +1,1 @@
-SELECT driverid, drivername, age, category, car, carnumber, fuelrate FROM DRIVERS WHERE drivername = ?
+SELECT driverid, drivername, age FROM DRIVERS WHERE drivername = ?
