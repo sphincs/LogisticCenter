@@ -1,11 +1,9 @@
 package com.sphincs.domain;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
-@Table(name = "DRIVERS")
+@Table(name = "DRIVERS", uniqueConstraints = @UniqueConstraint(columnNames = {"driverid", "drivername", "carnumber"}))
 public class Driver {
 
     @Id
@@ -19,62 +17,8 @@ public class Driver {
     @Column(name = "age")
     private Integer age;
 
-    private Set<Category> categories;
-
-    @Column(name = "category")
-    private String categoryDB;
-
-    private String getCategoryForDB() {
-        if (this.categories != null) {
-            StringBuilder sb = new StringBuilder();
-            for (Category current : this.categories) {
-                sb.append(current.ordinal()).append(", ");
-            }
-            String temp = sb.toString();
-            return temp.substring(0, temp.length() - 2);
-        } else throw new IllegalArgumentException();
-    }
-
-    public Set<Category> getCategoriesFromString(String stringCategories) {
-        stringCategories = stringCategories.substring(1, stringCategories.length() - 1);
-        String[] categoriesList = stringCategories.split(", ");
-        Set<Category> result = new HashSet<>();
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < Category.values().length; i++) {
-            sb.append(Category.getByIndex(i).toString()).append(',');
-        }
-        String category = sb.toString().substring(0, sb.toString().length() - 1);
-        for (int i = 0; i < categoriesList.length; i++) {
-            if (category.contains(categoriesList[i])) {
-                result.add(Category.valueOf(categoriesList[i]));
-            }
-        }
-        if (result.size() > 0) return result;
-        else return null;
-    }
-
-    private Car car;
-
     @Column(name = "car")
-    private Integer carDB;
-
-    private Integer getCarForDB() {
-        if (this.car != null) return this.car.ordinal();
-        else throw new IllegalArgumentException();
-    }
-
-    public Car getCarFromString(String stringCar) {
-        stringCar = stringCar.toUpperCase();
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < Car.values().length; i++) {
-            sb.append(Car.getByIndex(i).toString()).append(',');
-        }
-        String cars = sb.toString().substring(0, sb.toString().length() - 1);
-        if (cars.contains(stringCar)) {
-            return Car.valueOf(stringCar);
-        }
-        return null;
-    }
+    private String car;
 
     @Column(name = "carnumber")
     private String carNumber;
@@ -85,29 +29,21 @@ public class Driver {
     public Driver() {
     }
 
-    public Driver(Long id, String name, Integer age, Set<Category> categories, Car car, String carNumber) {
+    public Driver(Long id, String name, Integer age, String car, String carNumber, Double fuelRate100) {
         this.id = id;
         this.name = name;
         this.age = age;
-        this.categories = categories;
         this.car = car;
         this.carNumber = carNumber;
-        if (car != null) this.fuelRate100 = car.getFuelRate();
-        else this.fuelRate100 = 0D;
-        this.carDB = getCarForDB();
-        this.categoryDB = getCategoryForDB();
+        this.fuelRate100 = fuelRate100;
     }
 
     public Integer getAge() {
         return age;
     }
 
-    public Car getCar() {
+    public String getCar() {
         return car;
-    }
-
-    public Set<Category> getCategories() {
-        return categories;
     }
 
     public Double getFuelRate100() {
@@ -130,12 +66,8 @@ public class Driver {
         this.age = age;
     }
 
-    public void setCar(Car car) {
+    public void setCar(String car) {
         this.car = car;
-    }
-
-    public void setCategories(Set<Category> categories) {
-        this.categories = categories;
     }
 
     public void setId(Long id) {
@@ -150,23 +82,16 @@ public class Driver {
         this.carNumber = carNumber;
     }
 
-    public void setFuelRate100() {
-        this.fuelRate100 = car.getFuelRate();
+    public void setFuelRate100(Double fuelRate100) {
+        this.fuelRate100 = fuelRate100;
     }
 
     @Override
     public String toString() {
-        String tempCategories = "";
-        for (Category current : categories) {
-            tempCategories += current.name() + ", ";
-        }
-        if (!tempCategories.equals("")) tempCategories = tempCategories.substring(0, tempCategories.length() - 2);
-
         return "Driver: {" +
                 "id=" + id +
                 ", name=" + name +
                 ", age=" + age +
-                ", categories=" + tempCategories +
                 ", car=" + car +
                 ", carNumber=" + carNumber +
                 ", fuelRate100=" + fuelRate100 +
@@ -183,21 +108,10 @@ public class Driver {
         if (id != null ? !id.equals(driver.id) : driver.id != null) return false;
         if (name != null ? !name.equals(driver.name) : driver.name != null) return false;
         if (age != null ? !age.equals(driver.age) : driver.age != null) return false;
-
-        if (categories != null) {
-            if (categories.size() != driver.categories.size()) return false;
-            else {
-                for (Category current : categories) {
-                    if (!driver.categories.contains(current)) return false;
-                }
-            }
-        } else if (driver.categories != null) return false;
-
         if (car != null ? !car.equals(driver.car) : driver.car != null) return false;
         if (carNumber != null ? !carNumber.equals(driver.carNumber) : driver.carNumber != null) return false;
         if (fuelRate100 != null ? !fuelRate100.equals(driver.fuelRate100) : driver.fuelRate100 != null) return false;
 
         return true;
     }
-
 }

@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "TRIPS")
+@Table(name = "TRIPS", uniqueConstraints = @UniqueConstraint(columnNames = {"tripid"}))
 public class Trip {
 
     @Id
@@ -12,15 +12,8 @@ public class Trip {
     @Column(name = "tripid")
     private Long id;
 
-    private Driver driver;
-
     @Column(name = "tripdriver")
-    private Long driverId;
-
-    private Long getDriverForDB() {
-        if (this.driver != null) return this.driver.getId();
-        else throw new IllegalArgumentException();
-    }
+    private String driverName;
 
     @Column(name = "startpoint")
     private String startPoint;
@@ -29,7 +22,7 @@ public class Trip {
     private String endPoint;
 
     @Column(name = "distance")
-    private Double distance;
+    private String distance;
 
     @Column(name = "startdate")
     private Date startDate;
@@ -38,44 +31,36 @@ public class Trip {
     private Date endDate;
 
     @Column(name = "sumfuel")
-    private Double sumFuel;
+    private String sumFuel;
 
-    private String sumFuelString = getSumFuelString(sumFuel);
-
-    public String getSumFuelString(Double sumFuel) {
-        String tempString = String.valueOf(sumFuel);
-        if (tempString.indexOf('.') + 2 < tempString.length())
-            this.sumFuelString = tempString.substring(0, tempString.indexOf('.') + 3);
-        else this.sumFuelString = tempString;
-        return this.sumFuelString;
-    }
+    private Driver driver;
 
     public Trip() {
     }
 
-    public Trip(Long id, Driver driver, String startPoint, String endPoint, Double distance, Date startDate, Date endDate) {
+    public Trip(Long id, Driver driver, String startPoint, String endPoint, String distance, Date startDate, Date endDate) {
         this.id = id;
-        this.driver = driver;
+        this.driverName = driver.getName();
         this.startPoint = startPoint;
         this.endPoint = endPoint;
         this.distance = distance;
         this.startDate = startDate;
         this.endDate = endDate;
-        if (this.distance == null || this.distance <= 0 || this.driver == null) this.sumFuel = 0D;
-        else this.sumFuel = this.distance / 100 * this.driver.getFuelRate100();
-        this.driverId = getDriverForDB();
+
+        if (this.distance == null || Double.parseDouble(this.distance) <= 0 || driver == null) this.sumFuel = "0";
+        else this.sumFuel = String.format("%.2f", Double.parseDouble(this.distance) / 100 * driver.getFuelRate100());
     }
 
     public Long getId() {
         return id;
     }
 
-    public Double getDistance() {
+    public String getDistance() {
         return distance;
     }
 
-    public Driver getDriver() {
-        return driver;
+    public String getDriverName() {
+        return driverName;
     }
 
     public Date getEndDate() {
@@ -94,7 +79,7 @@ public class Trip {
         return startPoint;
     }
 
-    public Double getSumFuel() {
+    public String getSumFuel() {
         return sumFuel;
     }
 
@@ -102,12 +87,12 @@ public class Trip {
         this.id = id;
     }
 
-    public void setDistance(Double distance) {
+    public void setDistance(String distance) {
         this.distance = distance;
     }
 
-    public void setDriver(Driver driver) {
-        this.driver = driver;
+    public void setDriverName(String driverName) {
+        this.driverName = driverName;
     }
 
     public void setEndDate(Date endDate) {
@@ -127,8 +112,9 @@ public class Trip {
     }
 
     public void setSumFuel() {
-        if (this.distance > 0 && driver != null) this.sumFuel = (double) this.distance / 100 * this.driver.getFuelRate100();
-        else this.sumFuel = 0D;
+        if (this.distance == null || Double.parseDouble(this.distance) <= 0 || driver == null) this.sumFuel = "0";
+        else
+            this.sumFuel = String.format("%.2f", String.valueOf(Double.parseDouble(this.distance) / 100 * driver.getFuelRate100()));
     }
 
     @Override
@@ -145,6 +131,7 @@ public class Trip {
         if (distance != null ? !distance.equals(trip.distance) : trip.distance != null) return false;
         if (startDate != null ? !startDate.equals(trip.startDate) : trip.startDate != null) return false;
         if (endDate != null ? !endDate.equals(trip.endDate) : trip.endDate != null) return false;
+        if (sumFuel != null ? !sumFuel.equals(trip.sumFuel) : trip.sumFuel != null) return false;
 
         return true;
     }
@@ -153,12 +140,13 @@ public class Trip {
     public String toString() {
         return "Trip: {" +
                 "id=" + id +
-                "driver=" + driver +
+                "driverName=" + driverName +
                 ", startPoint=" + startPoint +
                 ", endPoint=" + endPoint +
                 ", distance=" + distance +
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +
+                ", sumFuel=" + sumFuel +
                 '}';
     }
 }
