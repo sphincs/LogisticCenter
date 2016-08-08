@@ -1,6 +1,7 @@
 package com.sphincs.service;
 
 import com.sphincs.dao.TripDao;
+import com.sphincs.domain.Driver;
 import com.sphincs.domain.Trip;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -27,20 +28,33 @@ public class TripServiceImpl implements TripService {
         LOGGER.debug("addTrip({}) ", trip);
         Assert.notNull(trip);
         Assert.isNull(trip.getId());
-        Assert.notNull(trip.getDriver(), "Trip's driver should be specified.");
+        Assert.notNull(trip.getDriverName(), "Trip's driver should be specified.");
+        Assert.isTrue(!trip.getDriverName().equals(""), "Trip's driver should be specified.");
+        Assert.notNull(trip.getCar(), "Driver's car should be specified.");
+        Assert.isTrue(!trip.getCar().equals(""), "Driver's car should be specified.");
+        Assert.notNull(trip.getFuelRate100(), "Fuel rate should be specified.");
+        Assert.isTrue(trip.getFuelRate100() > 0D, "Fuel rate should be more than 0. Incorrect car");
         Assert.notNull(trip.getStartPoint(), "Trip's startPoint should be specified.");
+        Assert.isTrue(!trip.getStartPoint().equals(""), "Trip's startPoint should be specified.");
         Assert.notNull(trip.getEndPoint(), "Trip's endPoint should be specified.");
+        Assert.isTrue(!trip.getEndPoint().equals(""), "Trip's endPoint should be specified.");
         Assert.notNull(trip.getDistance(), "Trip's distance should be specified.");
-        Assert.isTrue(trip.getDistance() > 0, "Trip's distance should be more than 0 km.");
+        Assert.isTrue(!trip.getDistance().equals(""), "Trip's distance should be specified.");
+        Assert.isTrue(Double.parseDouble(trip.getDistance()) > 0, "Trip's distance should be more than 0 km.");
         Assert.notNull(trip.getStartDate(), "Trip's startDate should be specified.");
+        Assert.isTrue(!trip.getStartDate().equals(""), "Trip's startDate should be specified.");
         Assert.notNull(trip.getEndDate(), "Trip's endDate should be specified.");
+        Assert.isTrue(!trip.getEndDate().equals(""), "Trip's endDate should be specified.");
         Assert.notNull(trip.getSumFuel(), "Trip's summary fuel rate should be specified.");
+        Assert.isTrue(!trip.getSumFuel().equals(""), "Trip's summary fuel rate should be specified.");
 
         List<Trip> existingTrips = tripDao.getTripsByRoute(trip.getStartPoint(), trip.getEndPoint());
         Trip existingTrip = null;
 
         for (Trip current : existingTrips) {
-            if (current.getDriver().equals(trip.getDriver()) &&
+            if (current.getDriverName().equals(trip.getDriverName()) &&
+                current.getCar().equals(trip.getCar()) &&
+                current.getFuelRate100().equals(trip.getFuelRate100()) &&
                 current.getDistance().equals(trip.getDistance()) &&
                 current.getStartDate().equals(trip.getStartDate()) &&
                 current.getEndDate().equals(trip.getEndDate()) &&
@@ -98,6 +112,19 @@ public class TripServiceImpl implements TripService {
 
     @Override
     @Transactional
+    public List<Trip> getTripsByCar(String car) {
+        LOGGER.debug("getTripsByCar({}) ", car);
+        List<Trip> trips = new ArrayList<>();
+        try {
+            trips = tripDao.getTripsByCar(car);
+        } catch (EmptyResultDataAccessException e) {
+            LOGGER.error("getTripsByCar({}), Exception:{}", car, e.toString());
+        }
+        return trips;
+    }
+
+    @Override
+    @Transactional
     public List<Trip> getTripsByRoute(String startPoint, String endPoint) {
         LOGGER.debug("getTripsByRoute({} - {}) ", startPoint, endPoint);
         List<Trip> trips = new ArrayList<>();
@@ -141,4 +168,5 @@ public class TripServiceImpl implements TripService {
             LOGGER.debug("updateTrip({}), Exception:{}",trip, e.toString());
         }
     }
+
 }

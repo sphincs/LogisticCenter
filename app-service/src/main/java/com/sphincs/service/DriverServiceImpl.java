@@ -2,7 +2,6 @@ package com.sphincs.service;
 
 import com.sphincs.dao.DriverDao;
 import com.sphincs.dao.TripDao;
-import com.sphincs.domain.Car;
 import com.sphincs.domain.Driver;
 import com.sphincs.domain.Trip;
 import org.apache.logging.log4j.LogManager;
@@ -34,12 +33,9 @@ public class DriverServiceImpl implements DriverService {
         Assert.notNull(driver);
         Assert.isNull(driver.getId());
         Assert.notNull(driver.getName(), "Driver's name should be specified.");
+        Assert.isTrue(!driver.getName().equals(""), "Driver's name should be specified.");
         Assert.notNull(driver.getAge(), "Driver's age should be specified.");
         Assert.isTrue(driver.getAge() > 18, "Driver's age should be more than 18 years old.");
-        Assert.notNull(driver.getCategories(), "Driver's categories should be specified.");
-        Assert.notNull(driver.getCar(), "Driver's car should be specified.");
-        Assert.notNull(driver.getCarNumber(), "Driver's car number should be specified.");
-        Assert.isTrue(driver.getFuelRate100() != 0D, "Fuel rate should be more than 0. Incorrect car");
 
         Driver existignDriver = getDriverByName(driver.getName());
 
@@ -101,32 +97,6 @@ public class DriverServiceImpl implements DriverService {
 
     @Override
     @Transactional
-    public Driver getDriverByCarNumber(String carNumber) {
-        LOGGER.debug("getDriverByNameCarNumber({}) ", carNumber);
-        Driver driver = null;
-        try {
-            driver = driverDao.getDriverByCarNumber(carNumber);
-        } catch (EmptyResultDataAccessException e) {
-            LOGGER.error("getDriverByNameCarNumber({}), Exception:{}", carNumber, e.toString());
-        }
-        return driver;
-    }
-
-    @Override
-    @Transactional
-    public List<Driver> getDriversByCar(Car car) {
-        LOGGER.debug("getDriversByCar({}) ", car);
-        List<Driver> drivers = new ArrayList<>();
-        try {
-            drivers = driverDao.getDriversByCar(car);
-        } catch (EmptyResultDataAccessException e) {
-            LOGGER.error("getDriversByCar({}), Exception:{}", car, e.toString());
-        }
-        return drivers;
-    }
-
-    @Override
-    @Transactional
     public void updateDriver(Driver driver) {
         LOGGER.debug("updateDriver({}) ", driver);
         Assert.notNull(driver);
@@ -144,4 +114,5 @@ public class DriverServiceImpl implements DriverService {
             LOGGER.debug("updateDriver({}), Exception:{}", driver, e.toString());
         }
     }
+
 }
