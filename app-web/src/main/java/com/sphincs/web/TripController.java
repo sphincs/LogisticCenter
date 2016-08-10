@@ -144,10 +144,11 @@ public class TripController {
             for (Trip current : trips) {
                 sum += Double.parseDouble(current.getSumFuel().replace(',', '.'));
             }
-            Map<String, String> result = new HashMap<>();
+            Map<String, Object> result = new HashMap<>();
             result.put("startDate", format.format(startDate));
             result.put("endDate", format.format(endDate));
-            result.put("sum", String.valueOf(sum));
+            result.put("sum", String.format("%.2f", sum));
+            result.put("trips", trips);
             return new ModelAndView("summaryByDates", "result", result);
         } catch (Exception e)  {
             return getErrorPage("Введены некорректные данные. Проверьте правильность ввода");
@@ -171,9 +172,10 @@ public class TripController {
             for (Trip current : trips) {
                 sum += Double.parseDouble(current.getSumFuel().replace(',', '.'));
             }
-            Map<String, String> result = new HashMap<>();
+            Map<String, Object> result = new HashMap<>();
             result.put("driver", driver.getName());
-            result.put("sum", String.valueOf(sum));
+            result.put("sum", String.format("%.2f", sum));
+            result.put("trips", trips);
             return new ModelAndView("summaryByDriver", "result", result);
         } else return getErrorPage("Водитель с ID = " + driverId + " не существует");
     }

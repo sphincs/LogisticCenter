@@ -24,13 +24,21 @@
     <table>
         <tr><spring:message code="trips.available"/></tr>
 
+        <td width="100"><spring:message code="trips.id"/></td>
+        <td width="100"><spring:message code="trips.driver"/></td>
+        <td width="100"><spring:message code="trips.startpoint"/></td>
+        <td width="100"><spring:message code="trips.endpoint"/></td>
+        <td width="100"><spring:message code="trips.startdate"/></td>
+        <td width="100"><spring:message code="trips.enddate"/></td>
+
         <c:forEach var="trip" items="${trips}">
             <tr>
-                <td width="200">${trip.id}</td>
-                <td width="200">${trip.startPoint}</td>
-                <td width="200">${trip.endPoint}</td>
-                <td width="200">${trip.startDate}</td>
-                <td width="200">${trip.startDate}</td>
+                <td width="100">${trip.id}</td>
+                <td width="100">${trip.driverName}</td>
+                <td width="100">${trip.startPoint}</td>
+                <td width="100">${trip.endPoint}</td>
+                <td width="100">${trip.startDate}</td>
+                <td width="100">${trip.startDate}</td>
             </tr>
         </c:forEach>
     </table>

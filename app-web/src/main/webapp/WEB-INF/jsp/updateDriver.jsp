@@ -23,11 +23,13 @@
 <form:form method="get" modelAttribute="drivers">
     <table>
         <tr><spring:message code="drivers.available"/></tr>
+        <td width="100"><spring:message code="driver.id"/></td>
+        <td width="100"><spring:message code="driver.name"/></td>
 
         <c:forEach var="driver" items="${drivers}">
             <tr>
-                <td width="200">${driver.id}</td>
-                <td width="200">${driver.name}</td>
+                <td width="100">${driver.id}</td>
+                <td width="100">${driver.name}</td>
             </tr>
         </c:forEach>
     </table>
