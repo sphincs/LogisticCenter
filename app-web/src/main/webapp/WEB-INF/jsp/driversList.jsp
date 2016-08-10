@@ -29,13 +29,9 @@
     <ul>
         <table>
             <th>
-            <td>ID</td>
-            <td>Имя</td>
-            <td>Возраст</td>
-            <td>Категории</td>
-            <td>Автомобиль</td>
-            <td>Номер автомобиля</td>
-            <td>Расход топлива</td>
+            <td><spring:message code="driver.id"/></td>
+            <td><spring:message code="driver.name"/></td>
+            <td><spring:message code="driver.age"/></td>
             </th>
             <c:forEach var="driver" items="${drivers}">
                 <tr>
@@ -43,10 +39,6 @@
                     <td>${driver.id}</td>
                     <td>${driver.name}</td>
                     <td>${driver.age}</td>
-                    <td>${driver.categories}</td>
-                    <td>${driver.car}</td>
-                    <td>${driver.carNumber}</td>
-                    <td>${driver.fuelRate100}</td>
                 </tr>
                 <tr/>
             </c:forEach>

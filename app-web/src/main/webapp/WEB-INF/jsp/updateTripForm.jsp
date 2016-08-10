@@ -13,7 +13,15 @@
         </tr>
         <tr>
             <td><label path="driver"><spring:message code="trips.driver"/>:</label></td>
-            <td><input type="text" name="DriverName" value="${trip.driver.name}" autofocus/><br/></td>
+            <td><input type="text" name="DriverName" value="${trip.driverName}" autofocus/><br/></td>
+        </tr>
+        <tr>
+            <td><label path="car"><spring:message code="trips.car"/>:</label></td>
+            <td><input type="text" name="Car" value="${trip.car}"/><br/></td>
+        </tr>
+        <tr>
+            <td><label path="car"><spring:message code="trips.fuelrate"/>:</label></td>
+            <td><input type="text" name="FuelRate100" value="${trip.fuelRate100}"/><br/></td>
         </tr>
         <tr>
             <td><label path="startPoint"><spring:message code="trips.startpoint"/>:</label></td>
@@ -38,7 +46,7 @@
             <td><spring:message code="trip.date.format"/></td>
         </tr>
         <tr>
-            <td><input type="submit" name="Submit" value=<spring:message code="button.trip.add"/>></td>
+            <td><input type="submit" name="Submit" value=<spring:message code="button.trip.update"/>></td>
         </tr>
     </table>
 </form>

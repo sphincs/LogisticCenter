@@ -31,6 +31,8 @@
             <th>
             <td><spring:message code="trips.id"/></td>
             <td><spring:message code="trips.driver"/></td>
+            <td><spring:message code="trips.car"/></td>
+            <td><spring:message code="trips.fuelrate"/></td>
             <td><spring:message code="trips.startpoint"/></td>
             <td><spring:message code="trips.endpoint"/></td>
             <td><spring:message code="trips.distance"/></td>
@@ -42,7 +44,9 @@
                 <tr>
                     <td/>
                     <td>${trip.id}</td>
-                    <td>${trip.driver.name}</td>
+                    <td>${trip.driverName}</td>
+                    <td>${trip.car}</td>
+                    <td>${trip.fuelRate100}</td>
                     <td>${trip.startPoint}</td>
                     <td>${trip.endPoint}</td>
                     <td>${trip.distance}</td>

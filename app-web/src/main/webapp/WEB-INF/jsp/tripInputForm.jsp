@@ -12,6 +12,14 @@
             <td><input type="text" name="DriverName" autofocus/><br/></td>
         </tr>
         <tr>
+            <td><label path="car"><spring:message code="trips.car"/>:</label></td>
+            <td><input type="text" name="Car"/><br/></td>
+        </tr>
+        <tr>
+            <td><label path="car"><spring:message code="trips.fuelrate"/>:</label></td>
+            <td><input type="text" name="FuelRate100"/><br/></td>
+        </tr>
+        <tr>
             <td><label path="startPoint"><spring:message code="trips.startpoint"/>:</label></td>
             <td><input type="text" name="StartPoint"/><br/></td>
         </tr>

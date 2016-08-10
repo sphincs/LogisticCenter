@@ -6,6 +6,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -46,12 +47,9 @@ public class DriverController {
 
     @RequestMapping("/submitData")
     public ModelAndView getInputFormView(@RequestParam("Name") String driverName,
-                                         @RequestParam("Age") String driverAge,
-                                         @RequestParam("Category") String driverCategories,
-                                         @RequestParam("Car") String driverCar,
-                                         @RequestParam("Number") String carNumber) {
+                                         @RequestParam("Age") Integer driverAge) {
         LOGGER.debug("add new driver");
-        Driver driver = checkDriverFields(new Driver(), driverName, driverAge, driverCategories, driverCar, carNumber);
+        Driver driver = checkDriverFields(new Driver(), driverName, driverAge);
         if (driver != null) {
             driverService.addDriver(driver);
             return getDriversListView();
@@ -100,13 +98,10 @@ public class DriverController {
     @RequestMapping(value = "/driverUpdate")
     public ModelAndView updateDriver(@RequestParam("Id") Long driverId,
                                      @RequestParam("Name") String driverName,
-                                     @RequestParam("Age") String driverAge,
-                                     @RequestParam("Category") String driverCategories,
-                                     @RequestParam("Car") String driverCar,
-                                     @RequestParam("Number") String carNumber) {
+                                     @RequestParam("Age") Integer driverAge) {
         LOGGER.debug("update driver with id = " + driverId);
         Driver driver = driverService.getDriverById(driverId);
-        driver = checkDriverFields(driver, driverName, driverAge, driverCategories, driverCar, carNumber);
+        driver = checkDriverFields(driver, driverName, driverAge);
         if (driver != null) {
             driverService.updateDriver(driver);
             return getDriversListView();
@@ -115,8 +110,7 @@ public class DriverController {
         }
     }
 
-    private Driver checkDriverFields(Driver driver, String driverName, String driverAge, String driverCategories, String driverCar,
-                                     String carNumber) {
+    private Driver checkDriverFields(Driver driver, String driverName, Integer driverAge) {
         boolean errorStatus = false;
         Pattern isNumber = Pattern.compile("[0-9]+");
 
@@ -124,32 +118,8 @@ public class DriverController {
             driver.setName(driverName);
         else errorStatus = true;
 
-        try {
-            if (!errorStatus && isNumber.matcher(driverAge).matches() && Integer.parseInt(driverAge) > 18)
-                driver.setAge(Integer.parseInt(driverAge));
-            else errorStatus = true;
-        } catch (NumberFormatException e) {
-            errorStatus = true;
-        }
-
-        if (!errorStatus && driverCategories.charAt(0) == '[' && driverCategories.charAt(driverCategories.length() - 1) == ']'
-                && !isNumber.matcher(driverCategories).matches())
-            driver.setCategories(driver.getCategoriesFromString(driverCategories));
-        if (driver.getCategories() == null) errorStatus = true;
-
-        if (!errorStatus) driver.setCar(driver.getCarFromString(driverCar));
-        if (driver.getCar() == null) errorStatus = true;
-
-        Pattern carNumberPat = Pattern.compile("^\\d{4}-[a-zA-Z]{2}\\d$");
-        if (!errorStatus
-                && (driverService.getDriverByCarNumber(carNumber) == null || (driver.getCarNumber() != null
-                && driverService.getDriverByCarNumber(carNumber).getId() == driver.getId())
-                && carNumberPat.matcher(carNumber).matches()))
-            driver.setCarNumber(carNumber);
-        else errorStatus = true;
-
-        if (!errorStatus) {
-            driver.setFuelRate100();
+        if (!errorStatus && driverAge >= 18) {
+            driver.setAge(driverAge);
             return driver;
         } else return null;
     }
@@ -161,4 +131,5 @@ public class DriverController {
         errorMap.put("url", "/drivers/driverInputForm");
         return new ModelAndView("error/404", "errorMap", errorMap);
     }
+
 }

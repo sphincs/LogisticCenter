@@ -16,19 +16,6 @@
             <td><input type="text" name="Age"/><br/></td>
         </tr>
         <tr>
-            <td><label path="categories"><spring:message code="driver.category"/>:</label></td>
-            <td><input type="text" name="Category" value="[]"/><br/></td>
-            <td><spring:message code="driver.category.format"/></td>
-        </tr>
-        <tr>
-            <td><label path="car"><spring:message code="driver.car"/>:</label></td>
-            <td><input type="text" name="Car"/><br/></td>
-        </tr>
-        <tr>
-            <td><label path="carNumber"><spring:message code="driver.number"/>:</label></td>
-            <td><input type="text" name="Number"/><br/></td>
-        </tr>
-        <tr>
             <td><input type="submit" name="Submit" value=<spring:message code="button.driver.add"/>></td>
         </tr>
     </table>

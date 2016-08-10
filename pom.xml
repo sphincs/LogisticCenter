@@ -10,7 +10,7 @@
         <module>app-core</module>
         <module>app-dao</module>
         <module>app-service</module>
-        <module>app-rest</module>
+<!--        <module>app-rest</module>  -->
         <module>app-web</module>
     </modules>
 
@@ -41,13 +41,13 @@
                 <artifactId>app-service</artifactId>
                 <version>${project.version}</version>
             </dependency>
-
+<!--
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>app-rest</artifactId>
                 <version>${project.version}</version>
             </dependency>
-
+-->
             <!-- Tests -->
             <dependency>
                 <groupId>org.testng</groupId>

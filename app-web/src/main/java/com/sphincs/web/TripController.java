@@ -7,6 +7,7 @@ import com.sphincs.service.TripService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -51,14 +52,16 @@ public class TripController {
     }
 
     @RequestMapping("/submitData")
-    public ModelAndView getInputFormView(@RequestParam("DriverName") String driverName,
-                                   @RequestParam("StartPoint") String startPoint,
-                                   @RequestParam("EndPoint") String endPoint,
-                                   @RequestParam("Distance") String distance,
-                                   @RequestParam("StartDate") String startDate,
-                                   @RequestParam("EndDate") String endDate) throws ParseException {
+    public ModelAndView getInputFormView(   @RequestParam("DriverName") String driverName,
+                                            @RequestParam("Car") String car,
+                                            @RequestParam("FuelRate100") Double fuelRate100,
+                                            @RequestParam("StartPoint") String startPoint,
+                                            @RequestParam("EndPoint") String endPoint,
+                                            @RequestParam("Distance") String distance,
+                                            @RequestParam("StartDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
+                                            @RequestParam("EndDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate) throws ParseException {
         LOGGER.debug("add new trip");
-        Trip trip = checkTripFields(new Trip(), driverName, startPoint, endPoint, distance, startDate, endDate);
+        Trip trip = checkTripFields(new Trip(), driverName, car, fuelRate100, startPoint, endPoint, distance, startDate, endDate);
         if (trip != null) {
             tripService.addTrip(trip);
             return getTripsListView();
@@ -105,16 +108,18 @@ public class TripController {
     }
 
     @RequestMapping(value = "/tripUpdate")
-    public ModelAndView updateDriver(@RequestParam("Id") Long tripId,
-                               @RequestParam("DriverName") String driverName,
-                               @RequestParam("StartPoint") String startPoint,
-                               @RequestParam("EndPoint") String endPoint,
-                               @RequestParam("Distance") String distance,
-                               @RequestParam("StartDate") String startDate,
-                               @RequestParam("EndDate") String endDate) throws ParseException {
+    public ModelAndView updateDriver(   @RequestParam("Id") Long tripId,
+                                        @RequestParam("DriverName") String driverName,
+                                        @RequestParam("Car") String car,
+                                        @RequestParam("FuelRate100") Double fuelRate100,
+                                        @RequestParam("StartPoint") String startPoint,
+                                        @RequestParam("EndPoint") String endPoint,
+                                        @RequestParam("Distance") String distance,
+                                        @RequestParam("StartDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
+                                        @RequestParam("EndDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate) throws ParseException {
         LOGGER.debug("update trip with id = " + tripId);
         Trip trip = tripService.getTripById(tripId);
-        trip = checkTripFields(trip, driverName, startPoint, endPoint, distance, startDate, endDate);
+        trip = checkTripFields(trip, driverName, car, fuelRate100, startPoint, endPoint, distance, startDate, endDate);
         if (trip != null) {
             tripService.updateTrip(trip);
             return getTripsListView();
@@ -129,19 +134,24 @@ public class TripController {
     }
 
     @RequestMapping(value = "/tripCountFuelDate")
-    public ModelAndView countFuelByDateView(@RequestParam("StartDate") String startDate,
-                                            @RequestParam("EndDate") String endDate) throws ParseException {
-        LOGGER.debug(String.format("get sumFuel between dates %s - %s", startDate, endDate));
-        List<Trip> trips = tripService.getTripsByDate(format.parse(startDate), format.parse(endDate));
-        Double sum = 0d;
-        for (Trip current : trips) {
-            sum += current.getSumFuel();
+    public ModelAndView countFuelByDateView(@RequestParam("StartDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
+                                            @RequestParam("EndDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate)
+                                            throws ParseException {
+        LOGGER.debug(String.format("get sumFuel between dates %s - %s", format.format(startDate), format.format(endDate)));
+        try {
+            List<Trip> trips = tripService.getTripsByDate(startDate, endDate);
+            Double sum = 0d;
+            for (Trip current : trips) {
+                sum += Double.parseDouble(current.getSumFuel().replace(',', '.'));
+            }
+            Map<String, String> result = new HashMap<>();
+            result.put("startDate", format.format(startDate));
+            result.put("endDate", format.format(endDate));
+            result.put("sum", String.valueOf(sum));
+            return new ModelAndView("summaryByDates", "result", result);
+        } catch (Exception e)  {
+            return getErrorPage("Введены некорректные данные. Проверьте правильность ввода");
         }
-        Map<String, String> result = new HashMap<>();
-        result.put("startDate", startDate);
-        result.put("endDate", endDate);
-        result.put("sum", new Trip().getSumFuelString(sum));
-        return new ModelAndView("summaryByDates", "result", result);
     }
 
     @RequestMapping(value = "/tripCountFuelDriverForm")
@@ -152,31 +162,37 @@ public class TripController {
     }
 
     @RequestMapping(value = "/tripCountFuelDriver")
-    public ModelAndView countFuelByDateView(@RequestParam("DriverId") String driverId) {
+    public ModelAndView countFuelByDateView(@RequestParam("DriverId") Long driverId) {
         LOGGER.debug("get sumFuel for driver with ID = " + driverId);
-        Driver driver = driverService.getDriverById(Long.parseLong(driverId));
+        Driver driver = driverService.getDriverById(driverId);
         if (driver != null) {
             List<Trip> trips = tripService.getTripsByDriver(driver.getName());
             Double sum = 0d;
             for (Trip current : trips) {
-                sum += current.getSumFuel();
+                sum += Double.parseDouble(current.getSumFuel().replace(',', '.'));
             }
             Map<String, String> result = new HashMap<>();
             result.put("driver", driver.getName());
-            Trip trip = new Trip();
-            result.put("sum", trip.getSumFuelString(sum));
+            result.put("sum", String.valueOf(sum));
             return new ModelAndView("summaryByDriver", "result", result);
         } else return getErrorPage("Водитель с ID = " + driverId + " не существует");
     }
 
-    private Trip checkTripFields(Trip trip, String driverName, String startPoint, String endPoint, String distance,
-                                     String startDate, String endDate) {
+    private Trip checkTripFields(Trip trip, String driverName, String car, Double fuelRate100, String startPoint,
+                                 String endPoint, String distance, Date startDate, Date endDate) {
         boolean errorStatus = false;
         Pattern isNumber = Pattern.compile("[0-9]+");
 
         Driver driver = driverService.getDriverByName(driverName);
         if (!errorStatus && driver != null)
-            trip.setDriver(driver);
+            trip.setDriverName(driverName);
+        else errorStatus = true;
+
+        if (!errorStatus && !isNumber.matcher(car).matches())
+            trip.setCar(car);
+        else errorStatus = true;
+
+        if (fuelRate100 > 0) trip.setFuelRate100(fuelRate100);
         else errorStatus = true;
 
         if (!errorStatus && !isNumber.matcher(startPoint).matches())
@@ -188,27 +204,18 @@ public class TripController {
         else errorStatus = true;
 
         try {
-            if (!errorStatus)
-                trip.setDistance(Double.parseDouble(distance));
+            if (!errorStatus) {
+                Double checker = Double.parseDouble(distance);
+                trip.setDistance(distance);
+                trip.setStartDate(startDate);
+                trip.setEndDate(endDate);
+                trip.setSumFuel();
+                return trip;
+            } else return null;
         } catch (NumberFormatException e) {
             errorStatus = true;
+            return null;
         }
-
-        Date start = null;
-        Date end = null;
-        try {
-            start = format.parse(startDate);
-            end = format.parse(endDate);
-            if (start.after(end)) errorStatus = true;
-        } catch (ParseException e) {
-            errorStatus = true;
-        }
-        if (!errorStatus) {
-            trip.setStartDate(start);
-            trip.setEndDate(end);
-            trip.setSumFuel();
-            return trip;
-        } else return null;
     }
 
     private ModelAndView getErrorPage(String exceptionMessage) {
