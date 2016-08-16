@@ -9,12 +9,12 @@
 <table border="0">
     <tr>
         <td width="30">
-            <form action="/drivers/" method="get">
+            <form action="/driversList/" method="get">
                 <input type="submit" name="Submit" value=<spring:message code="button.driver.goto"/>>
             </form>
         </td>
         <td width="30">
-            <form action="/trips/" method="get">
+            <form action="/tripsList/" method="get">
                 <input type="submit" name="Submit" value=<spring:message code="button.trip.goto"/>>
             </form>
         </td>

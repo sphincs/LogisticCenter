@@ -5,7 +5,7 @@
 <body>
 <h1><spring:message code="trip.create"/></h1>
 
-<form action="/trips/submitData" method="post">
+<form action="/submitTripData" method="post">
     <table border="0">
         <tr>
             <td><label path="driver"><spring:message code="trips.driver"/>:</label></td>
@@ -47,7 +47,7 @@
     </table>
 </form>
 
-<form action="/trips/tripsList" method="get">
+<form action="/tripsList" method="get">
     <input type="submit" name="Submit" value=<spring:message code="button.back"/>>
 </form>
 </body>

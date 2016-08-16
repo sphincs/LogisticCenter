@@ -6,7 +6,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -19,7 +18,6 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 @Controller
-@RequestMapping("/drivers")
 public class DriverController {
 
     private static final Logger LOGGER = LogManager.getLogger();
@@ -27,11 +25,6 @@ public class DriverController {
 
     @Autowired
     private DriverService driverService;
-
-    @RequestMapping("/")
-    public String init() {
-        return "redirect:/drivers/driversList";
-    }
 
     @RequestMapping(value = "/driversList")
     public ModelAndView getDriversListView() {
@@ -45,7 +38,7 @@ public class DriverController {
         return new ModelAndView("driverInputForm", "driver", new Driver());
     }
 
-    @RequestMapping("/submitData")
+    @RequestMapping("/submitDriverData")
     public ModelAndView getInputFormView(@RequestParam("Name") String driverName,
                                          @RequestParam("Age") Integer driverAge) {
         LOGGER.debug("add new driver");

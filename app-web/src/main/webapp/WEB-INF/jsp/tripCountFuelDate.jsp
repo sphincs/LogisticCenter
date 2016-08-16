@@ -5,7 +5,7 @@
 <body>
 <h1><spring:message code="trip.dates"/></h1>
 
-<form action="/trips/tripCountFuelDate" method="get">
+<form action="/tripCountFuelDate" method="get">
     <table border="0">
         <tr>
             <td><label path="startDate"><spring:message code="trips.after"/></label></td>
@@ -23,7 +23,7 @@
     </table>
 </form>
 
-<form action="/trips/tripsList" method="get">
+<form action="/tripsList" method="get">
     <input type="submit" name="Submit" value=<spring:message code="button.back"/>>
 </form>
 </body>

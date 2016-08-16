@@ -61,19 +61,19 @@
 </form:form>
 
 
-<form action="/trips/tripInputForm" method="get">
+<form action="/tripInputForm" method="get">
     <input type="submit" name="Submit" width="2000" value=<spring:message code="button.trip.create"/>>
 </form>
-<form action="/trips/tripUpdateId" method="get">
+<form action="/tripUpdateId" method="get">
     <input type="submit" name="Submit" value=<spring:message code="button.trip.update"/>>
 </form>
-<form action="/trips/tripRemoveForm" method="get">
+<form action="/tripRemoveForm" method="get">
     <input type="submit" name="Submit" value=<spring:message code="button.trip.remove"/>>
 </form>
-<form action="/trips/tripCountFuelDateForm" method="get">
+<form action="/tripCountFuelDateForm" method="get">
     <input type="submit" name="Submit" value=<spring:message code="button.trip.countfueldate"/>>
 </form>
-<form action="/trips/tripCountFuelDriverForm" method="get">
+<form action="/tripCountFuelDriverForm" method="get">
     <input type="submit" name="Submit" value=<spring:message code="button.trip.countfueldriver"/>>
 </form>
 <form action="/" method="get">

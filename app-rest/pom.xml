@@ -20,12 +20,12 @@
             <groupId>com.sphincs</groupId>
             <artifactId>app-core</artifactId>
         </dependency>
-<!--
+
         <dependency>
             <groupId>com.sphincs</groupId>
             <artifactId>app-dao</artifactId>
         </dependency>
--->
+
         <dependency>
             <groupId>com.sphincs</groupId>
             <artifactId>app-service</artifactId>

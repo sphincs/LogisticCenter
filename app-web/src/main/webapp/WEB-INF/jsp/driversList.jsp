@@ -47,13 +47,13 @@
 </form:form>
 
 
-<form action="/drivers/driverInputForm" method="get">
+<form action="/driverInputForm" method="get">
     <input type="submit" name="Submit" value=<spring:message code="button.driver.create"/>>
 </form>
-<form action="/drivers/driverUpdateId" method="get">
+<form action="/driverUpdateId" method="get">
     <input type="submit" name="Submit" value=<spring:message code="button.driver.update"/>>
 </form>
-<form action="/drivers/driverRemoveForm" method="get">
+<form action="/driverRemoveForm" method="get">
     <input type="submit" name="Submit" value=<spring:message code="button.driver.remove"/>>
 </form>
 <form action="/" method="get">

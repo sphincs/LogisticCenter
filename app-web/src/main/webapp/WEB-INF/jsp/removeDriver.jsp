@@ -7,7 +7,7 @@
 <body>
 <h1><spring:message code="driver.remove"/></h1>
 
-<form action="/drivers/driverRemove" method="post">
+<form action="/driverRemove" method="post">
     <table border="0">
         <tr>
             <td><label path="id"><spring:message code="driver.id"/>:</label></td>
@@ -36,7 +36,7 @@
 </form:form>
 
 
-<form action="/drivers/driversList" method="get">
+<form action="/driversList" method="get">
     <input type="submit" name="Submit" value=<spring:message code="button.back"/>>
 </form>
 </body>

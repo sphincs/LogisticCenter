@@ -1,6 +1,7 @@
 package com.sphincs.domain;
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
 
 @Entity
 @Table(name = "DRIVERS", uniqueConstraints = @UniqueConstraint(columnNames = {"driverid", "drivername", "carnumber"}))
@@ -11,9 +12,16 @@ public class Driver {
     @Column(name = "driverid")
     private Long id;
 
+    @Size(min = 2, max = 100,
+            message = "Driver's name must be between 2 and 100 characters of roman alphabet. Space is allow")
+    @Pattern(regexp = "^[a-zA-Z][a-zA-Z\\s]+")
     @Column(name = "drivername")
     private String name;
 
+    @Min(value = 18,
+            message = "Driver's age must be no less than 18 ages")
+    @Max(value = 65,
+            message = "Driver's age must be no more than 65 ages")
     @Column(name = "age")
     private Integer age;
 

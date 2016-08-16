@@ -22,7 +22,6 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 @Controller
-@RequestMapping("/trips")
 public class TripController {
 
     private static final Logger LOGGER = LogManager.getLogger();
@@ -33,11 +32,6 @@ public class TripController {
 
     @Autowired
     private TripService tripService;
-
-    @RequestMapping("/")
-    public String init() {
-        return "redirect:/trips/tripsList";
-    }
 
     @RequestMapping(value = "/tripsList")
     public ModelAndView getTripsListView() {
@@ -51,7 +45,7 @@ public class TripController {
         return new ModelAndView("tripInputForm", "trip", new Trip());
     }
 
-    @RequestMapping("/submitData")
+    @RequestMapping("/submitTripData")
     public ModelAndView getInputFormView(   @RequestParam("DriverName") String driverName,
                                             @RequestParam("Car") String car,
                                             @RequestParam("FuelRate100") Double fuelRate100,

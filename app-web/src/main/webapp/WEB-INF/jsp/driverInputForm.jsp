@@ -5,7 +5,7 @@
 <body>
 <h1><spring:message code="driver.create"/></h1>
 
-<form action="/drivers/submitData" method="post">
+<form action="/submitDriverData" method="post">
     <table border="0">
         <tr>
             <td><label path="name"><spring:message code="driver.name"/>:</label></td>
@@ -21,7 +21,7 @@
     </table>
 </form>
 
-<form action="/drivers/driversList" method="get">
+<form action="/driversList" method="get">
     <input type="submit" name="Submit" value=<spring:message code="button.back"/>>
 </form>
 </body>

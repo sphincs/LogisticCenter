@@ -44,7 +44,7 @@
     </table>
 </form:form>
 
-<form action="/trips/tripsList" method="get">
+<form action="/tripsList" method="get">
     <input type="submit" name="Submit" value=<spring:message code="button.back"/>>
 </form>
 </body>

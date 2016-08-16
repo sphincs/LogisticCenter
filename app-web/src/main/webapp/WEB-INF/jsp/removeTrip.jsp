@@ -7,7 +7,7 @@
 <body>
 <h1><spring:message code="trip.remove"/></h1>
 
-<form action="/trips/tripRemove" method="post">
+<form action="/tripRemove" method="post">
     <table border="0">
         <tr>
             <td><label path="id"><spring:message code="trips.id"/>:</label></td>
@@ -44,7 +44,7 @@
     </table>
 </form:form>
 
-<form action="/trips/tripsList" method="get">
+<form action="/tripsList" method="get">
     <input type="submit" name="Submit" value=<spring:message code="button.back"/>>
 </form>
 </body>
