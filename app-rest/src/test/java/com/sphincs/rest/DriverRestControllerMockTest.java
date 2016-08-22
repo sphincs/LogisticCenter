@@ -1,17 +1,18 @@
 package com.sphincs.rest;
 
-import com.sphincs.domain.Car;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sphincs.domain.Driver;
 import com.sphincs.service.DriverService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.springframework.test.web.servlet.MockMvc;
-import org.testng.annotations.*;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.http.MediaType;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.web.servlet.ResultActions;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 
 import javax.annotation.Resource;
 
@@ -113,8 +114,8 @@ public class DriverRestControllerMockTest extends AbstractTestNGSpringContextTes
         )
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().string("[{\"id\":1,\"name\":\"Ralph\",\"age\":33,\"categories\":[\"D\"],\"car\":\"DAF\",\"carNumber\":\"1234-ab1\",\"fuelRate100\":13.5},"
-                        + "{\"id\":2,\"name\":\"Mike\",\"age\":40,\"categories\":[\"B\"],\"car\":\"BMW\",\"carNumber\":\"9876-ab1\",\"fuelRate100\":7.5}]"));
+                .andExpect(content().string("[{\"id\":1,\"name\":\"Mike\",\"age\":35},"
+                        + "{\"id\":2,\"name\":\"Bobby\",\"age\":33}]"));
         verify(driverService);
     }
 
@@ -129,12 +130,12 @@ public class DriverRestControllerMockTest extends AbstractTestNGSpringContextTes
         )
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().string("{\"id\":" + driverId + ",\"name\":\"Ralph\",\"age\":33,\"categories\":[\"D\"],\"car\":\"DAF\",\"carNumber\":\"1234-ab1\",\"fuelRate100\":13.5}"));
+                .andExpect(content().string("{\"id\":" + driverId + ",\"name\":\"Mike\",\"age\":35}"));
         verify(driverService);
     }
 
     @Test
-    public void getNotFoundDriverByIdTest() throws Exception{
+    public void getNotFoundDriverByIdTest() throws Exception {
         expect(driverService.getDriverById(10L)).andReturn(null);
         replay(driverService);
 
@@ -157,49 +158,18 @@ public class DriverRestControllerMockTest extends AbstractTestNGSpringContextTes
         )
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().string("{\"id\":2,\"name\":\"" + driverName + "\",\"age\":40,\"categories\":[\"B\"],\"car\":\"BMW\",\"carNumber\":\"9876-ab1\",\"fuelRate100\":7.5}"));
+                .andExpect(content().string("{\"id\":2,\"name\":\"" + driverName + "\",\"age\":33}"));
         verify(driverService);
     }
 
     @Test
     public void getNotFoundDriverByNameTest() throws Exception {
-        String driverName = "Mike";
+        String driverName = "Rick";
         expect(driverService.getDriverByName(driverName))
                 .andReturn(null);
         replay(driverService);
         this.mockMvc.perform(
                 get("/drivers/name/" + driverName).accept(MediaType.APPLICATION_JSON)
-        )
-                .andDo(print())
-                .andExpect(status().isNotFound());
-        verify(driverService);
-    }
-
-
-    @Test
-    public void getDriversByCarTest() throws Exception {
-        Car car = Car.DAF;
-        expect(driverService.getDriversByCar(car))
-                .andReturn(DriverDataFixture.getExistingDriversByCar(car));
-        replay(driverService);
-        this.mockMvc.perform(
-                get("/drivers/car/" + car).accept(MediaType.APPLICATION_JSON)
-        )
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().string("[{\"id\":1,\"name\":\"Ralph\",\"age\":33,\"categories\":[\"D\"],\"car\":\"DAF\",\"carNumber\":\"1234-ab1\",\"fuelRate100\":13.5},"
-                        + "{\"id\":2,\"name\":\"Ralph\",\"age\":33,\"categories\":[\"D\"],\"car\":\"DAF\",\"carNumber\":\"1234-ab1\",\"fuelRate100\":13.5}]"));
-        verify(driverService);
-    }
-
-    @Test
-    public void getNotFoundDriversByCarTest() throws Exception {
-        Car car = Car.LADA;
-        expect(driverService.getDriversByCar(car))
-                .andReturn(null);
-        replay(driverService);
-        this.mockMvc.perform(
-                get("/drivers/car/" + car).accept(MediaType.APPLICATION_JSON)
         )
                 .andDo(print())
                 .andExpect(status().isNotFound());
@@ -212,7 +182,7 @@ public class DriverRestControllerMockTest extends AbstractTestNGSpringContextTes
         expectLastCall();
         replay(driverService);
         ResultActions result = this.mockMvc.perform(
-                delete("/drivers/1"))
+                delete("/drivers/remove/1"))
                 .andDo(print());
         result.andExpect(status().isOk());
         verify(driverService);
@@ -231,12 +201,13 @@ public class DriverRestControllerMockTest extends AbstractTestNGSpringContextTes
 
         ResultActions result = this.mockMvc.perform(
                 put("/drivers")
-                .content(driverJson)
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
+                        .content(driverJson)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
         )
                 .andDo(print());
         result.andExpect(status().isOk());
         verify(driverService);
     }
+
 }

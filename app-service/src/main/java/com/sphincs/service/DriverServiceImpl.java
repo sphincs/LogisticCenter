@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -33,7 +32,7 @@ public class DriverServiceImpl implements DriverService {
         Assert.notNull(driver);
         Assert.isNull(driver.getId());
         Assert.notNull(driver.getName(), "Driver's name should be specified.");
-        Assert.isTrue(!driver.getName().equals(""), "Driver's name should be specified.");
+        Assert.isTrue(!driver.getName().isEmpty(), "Driver's name should be specified.");
         Assert.notNull(driver.getAge(), "Driver's age should be specified.");
         Assert.isTrue(driver.getAge() > 18, "Driver's age should be more than 18 years old.");
 
@@ -100,11 +99,10 @@ public class DriverServiceImpl implements DriverService {
     public void updateDriver(Driver driver) {
         LOGGER.debug("updateDriver({}) ", driver);
         Assert.notNull(driver);
-        Driver modifyDriver = null;
         try {
-            modifyDriver = driverDao.getDriverById(driver.getId());
+            driverDao.getDriverById(driver.getId());
         } catch (EmptyResultDataAccessException e) {
-            LOGGER.error("updateDriver({}): Exception:{}", driver, e.toString());
+            LOGGER.error("updateDriver({}): Exception:{}", driver, e.toString(), e);
             return;
         }
 

@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 @Controller
-public class DriverController {
+public class DriverController extends ExceptionHandlerController {
 
     private static final Logger LOGGER = LogManager.getLogger();
     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -46,9 +46,10 @@ public class DriverController {
         if (driver != null) {
             driverService.addDriver(driver);
             return getDriversListView();
-        } else {
-            return getErrorPage("Введены некорректные данные. Проверьте правильность ввода");
         }
+
+        return getErrorPage("Введены некорректные данные. Проверьте правильность ввода");
+
     }
 
     @RequestMapping(value = "/driverRemoveForm")
@@ -114,7 +115,8 @@ public class DriverController {
         if (!errorStatus && driverAge >= 18) {
             driver.setAge(driverAge);
             return driver;
-        } else return null;
+        }
+        return null;
     }
 
     private ModelAndView getErrorPage(String exceptionMessage) {

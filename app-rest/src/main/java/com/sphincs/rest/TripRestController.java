@@ -1,6 +1,5 @@
 package com.sphincs.rest;
 
-import com.sphincs.domain.Driver;
 import com.sphincs.domain.Trip;
 import com.sphincs.service.TripService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +38,7 @@ public class TripRestController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/all/", method = RequestMethod.GET)
+    @RequestMapping(value = "/all", method = RequestMethod.GET)
     public ResponseEntity<List<Trip>> getAllTrips() {
         List<Trip> trips = tripService.getAllTrips();
         return new ResponseEntity(trips, HttpStatus.OK);
@@ -74,14 +73,26 @@ public class TripRestController {
             @PathVariable String endPoint) {
         List<Trip> trips = tripService.getTripsByRoute(startPoint, endPoint);
         if (trips == null) {
-            return new ResponseEntity(String.format("Trips with route = %s - %s not found", startPoint, endPoint), HttpStatus.NOT_FOUND);
+            return new ResponseEntity(String.format("Trips with route form %s to %s not found", startPoint, endPoint),
+                    HttpStatus.NOT_FOUND);
         } else {
             return new ResponseEntity(trips, HttpStatus.OK);
         }
     }
 
     @ResponseBody
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/car/{car}", method = RequestMethod.GET)
+    public ResponseEntity<List<Trip>> getTripsByCar(@PathVariable String car) {
+        List<Trip> trips = tripService.getTripsByCar(car);
+        if (trips == null) {
+            return new ResponseEntity(String.format("Trips with car = %s not found", car), HttpStatus.NOT_FOUND);
+        } else {
+            return new ResponseEntity(trips, HttpStatus.OK);
+        }
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/remove/{id}", method = RequestMethod.DELETE)
     public ResponseEntity removeTrip(@PathVariable Long id) {
         tripService.removeTrip(id);
         return new ResponseEntity("", HttpStatus.OK);
@@ -99,15 +110,15 @@ public class TripRestController {
     }
 
     @ResponseBody
-    @RequestMapping(value ="/date/{startDate}/{endDate}", method = RequestMethod.GET)
+    @RequestMapping(value = "/date/{startDate}/{endDate}", method = RequestMethod.GET)
     public ResponseEntity<List<Trip>> getTripsByDate(
             @PathVariable String startDate,
             @PathVariable String endDate) throws ParseException {
         Date start = formatter.parse(startDate);
         Date end = formatter.parse(endDate);
         List<Trip> trips = tripService.getTripsByDate(start, end);
-        if (trips == null) {
-            return new ResponseEntity(String.format("Trips with date fron %s to %s not found",
+        if (trips.isEmpty()) {
+            return new ResponseEntity(String.format("Trips with date from %s to %s not found",
                     formatter.format(startDate),
                     formatter.format(endDate)),
                     HttpStatus.NOT_FOUND);
@@ -115,8 +126,5 @@ public class TripRestController {
             return new ResponseEntity(trips, HttpStatus.OK);
         }
     }
-
-
-
 
 }

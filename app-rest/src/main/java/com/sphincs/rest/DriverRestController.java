@@ -1,6 +1,5 @@
 package com.sphincs.rest;
 
-import com.sphincs.domain.Car;
 import com.sphincs.domain.Driver;
 import com.sphincs.service.DriverService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @Controller
@@ -32,14 +32,14 @@ public class DriverRestController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/all/", method = RequestMethod.GET)
-    public ResponseEntity <List<Driver>> getAllDrivers() {
+    @RequestMapping(value = "/all", method = RequestMethod.GET)
+    public ResponseEntity<List<Driver>> getAllDrivers() {
         List<Driver> drivers = driverService.getAllDrivers();
         return new ResponseEntity(drivers, HttpStatus.OK);
     }
 
     @ResponseBody
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/remove/{id}", method = RequestMethod.DELETE)
     public ResponseEntity removeDriver(@PathVariable Long id) {
         driverService.removeDriver(id);
         return new ResponseEntity("", HttpStatus.OK);
@@ -65,17 +65,6 @@ public class DriverRestController {
             return new ResponseEntity("Driver with name = " + name + " not found.", HttpStatus.NOT_FOUND);
         } else {
             return new ResponseEntity(driver, HttpStatus.OK);
-        }
-    }
-
-    @ResponseBody
-    @RequestMapping(value = "/car/{car}", method = RequestMethod.GET)
-    public ResponseEntity<List<Driver>> getDriversByCar(@PathVariable Car car) {
-        List<Driver> drivers = driverService.getDriversByCar(car);
-        if (drivers == null) {
-            return new ResponseEntity("Drivers with car = " + car + " not found.", HttpStatus.NOT_FOUND);
-        } else {
-            return new ResponseEntity(drivers, HttpStatus.OK);
         }
     }
 

@@ -15,8 +15,6 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import javax.annotation.Resource;
-
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -62,9 +60,9 @@ public class TripRestControllerMockTest extends AbstractTestNGSpringContextTests
 
         this.mockMvc.perform(
                 post("/trips")
-                .content(tripJson)
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
+                        .content(tripJson)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
         )
                 .andDo(print())
                 .andExpect(status().isCreated())
@@ -117,7 +115,7 @@ public class TripRestControllerMockTest extends AbstractTestNGSpringContextTests
                 .andReturn(TripDataFixture.getAllTrips());
         replay(tripService);
         this.mockMvc.perform(
-                get("/trips/all/").accept(MediaType.APPLICATION_JSON)
+                get("/trips/all").accept(MediaType.APPLICATION_JSON)
         )
                 .andDo(print())
                 .andExpect(status().isOk());
@@ -135,7 +133,9 @@ public class TripRestControllerMockTest extends AbstractTestNGSpringContextTests
         )
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().string("{\"id\":1,\"driver\":{\"id\":2,\"name\":\"Ralph\",\"age\":33,\"categories\":[\"D\"],\"car\":\"DAF\",\"carNumber\":\"1234-ab1\",\"fuelRate100\":13.5},\"startPoint\":\"gomel\",\"endPoint\":\"rome\",\"distance\":2530.0,\"startDate\":1467666000000,\"endDate\":1467925200000,\"sumFuel\":341.55}"));
+                .andExpect(content().string("{\"id\":1,\"driverName\":\"Mike\",\"car\":\"VOLVO\",\"fuelRate100\":15.0," +
+                        "\"startPoint\":\"Gomel\",\"endPoint\":\"Rome\",\"distance\":\"2530\"," +
+                        "\"startDate\":1467666000000,\"endDate\":1467925200000,\"sumFuel\":\"379,50\"}"));
         verify(tripService);
     }
 
@@ -183,13 +183,13 @@ public class TripRestControllerMockTest extends AbstractTestNGSpringContextTests
 
     @Test
     public void getTripsByRouteTest() throws Exception {
-        String startPoint = "brest";
-        String endPoint = "minsk";
+        String startPoint = "Brest";
+        String endPoint = "Minsk";
         expect(tripService.getTripsByRoute(startPoint, endPoint))
                 .andReturn(TripDataFixture.getTripsByRoute());
         replay(tripService);
         this.mockMvc.perform(
-                get("/trips/route/brest/minsk").accept(MediaType.APPLICATION_JSON)
+                get("/trips/route/Brest/Minsk").accept(MediaType.APPLICATION_JSON)
         )
                 .andDo(print())
                 .andExpect(status().isOk());
@@ -198,19 +198,18 @@ public class TripRestControllerMockTest extends AbstractTestNGSpringContextTests
 
     @Test
     public void getNotFoundTripsByRouteTest() throws Exception {
-        String startPoint = "brest";
-        String endPoint = "minsk";
+        String startPoint = "Brest";
+        String endPoint = "Minsk";
         expect(tripService.getTripsByRoute(startPoint, endPoint))
                 .andReturn(null);
         replay(tripService);
         this.mockMvc.perform(
-                get("/trips/route/brest/minsk").accept(MediaType.APPLICATION_JSON)
+                get("/trips/route/Brest/Minsk").accept(MediaType.APPLICATION_JSON)
         )
                 .andDo(print())
                 .andExpect(status().isNotFound());
         verify(tripService);
     }
-
 
     @Test
     public void getTripsByDateTest() throws Exception {
@@ -231,12 +230,40 @@ public class TripRestControllerMockTest extends AbstractTestNGSpringContextTests
     }
 
     @Test
+    public void getTripsByCarTest() throws Exception {
+        String car = "VOLVO";
+        expect(tripService.getTripsByCar(car))
+                .andReturn(TripDataFixture.getTripsByCar());
+        replay(tripService);
+        this.mockMvc.perform(
+                get("/trips/car/" + car).accept(MediaType.APPLICATION_JSON)
+        )
+                .andDo(print())
+                .andExpect(status().isOk());
+        verify(tripService);
+    }
+
+    @Test
+    public void getNotFoundTripsByCarTest() throws Exception {
+        String car = "MAN";
+        expect(tripService.getTripsByCar(car))
+                .andReturn(null);
+        replay(tripService);
+        this.mockMvc.perform(
+                get("/trips/car/" + car).accept(MediaType.APPLICATION_JSON)
+        )
+                .andDo(print())
+                .andExpect(status().isNotFound());
+        verify(tripService);
+    }
+
+    @Test
     public void removeTripTest() throws Exception {
         tripService.removeTrip(1L);
         expectLastCall();
         replay(tripService);
         ResultActions result = this.mockMvc.perform(
-                delete("/trips/1"))
+                delete("/trips/remove/1"))
                 .andDo(print());
         result.andExpect(status().isOk());
         verify(tripService);
@@ -250,7 +277,7 @@ public class TripRestControllerMockTest extends AbstractTestNGSpringContextTests
 
         ObjectMapper objectMapper = new ObjectMapper();
         Trip trip = TripDataFixture.getNewTripWithId(1L);
-        trip.setStartPoint("gomel");
+        trip.setStartPoint("Vitebsk");
         String tripJson = objectMapper.writeValueAsString(trip);
 
         ResultActions result = this.mockMvc.perform(

@@ -72,11 +72,11 @@ public class DriverDaoImpl implements DriverDao {
         Assert.notNull(driver);
         Assert.isNull(driver.getId());
         Assert.notNull(driver.getName(), "Driver's name should be specified.");
-        Assert.isTrue(!driver.getName().equals(""), "Driver's name should be specified.");
+        Assert.isTrue(!driver.getName().isEmpty(), "Driver's name should be specified.");
         Assert.notNull(driver.getAge(), "Driver's age should be specified.");
         Assert.isTrue(driver.getAge() >= 18, "Driver's age should be no less than 18 years old.");
 
-        Map<String, Object> params = new HashMap<>(6);
+        Map<String, Object> params = new HashMap<>();
         params.put(NAME, driver.getName());
         params.put(AGE, driver.getAge());
 
