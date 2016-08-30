@@ -107,8 +107,6 @@ public class TripDaoImpl implements TripDao {
         Assert.isTrue(!trip.getStartDate().equals(""), "Trip's startDate should be specified.");
         Assert.notNull(trip.getEndDate(), "Trip's endDate should be specified.");
         Assert.isTrue(!trip.getEndDate().equals(""), "Trip's endDate should be specified.");
-        Assert.notNull(trip.getSumFuel(), "Trip's summary fuel rate should be specified.");
-        Assert.isTrue(!trip.getSumFuel().equals(""), "Trip's summary fuel rate should be specified.");
 
         Map<String, Object> params = new HashMap<>(8);
         params.put(DRIVER, trip.getDriverName());

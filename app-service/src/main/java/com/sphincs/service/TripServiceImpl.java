@@ -44,8 +44,6 @@ public class TripServiceImpl implements TripService {
         Assert.isTrue(!trip.getStartDate().toString().isEmpty(), "Trip's startDate should be specified.");
         Assert.notNull(trip.getEndDate(), "Trip's endDate should be specified.");
         Assert.isTrue(!trip.getEndDate().toString().isEmpty(), "Trip's endDate should be specified.");
-        Assert.notNull(trip.getSumFuel(), "Trip's summary fuel rate should be specified.");
-        Assert.isTrue(!trip.getSumFuel().isEmpty(), "Trip's summary fuel rate should be specified.");
 
         if (isTripExist(trip)) {
             throw new IllegalArgumentException(trip + " is present in DB");
@@ -103,7 +101,6 @@ public class TripServiceImpl implements TripService {
     @Transactional
     public List<Trip> getTripsByDriver(String name) {
         LOGGER.debug("getTripsByDriver({}) ", name);
-//        List<Trip> trips = new ArrayList<>();
         List<Trip> trips = null;
         try {
             trips = tripDao.getTripsByDriver(name);
@@ -167,7 +164,7 @@ public class TripServiceImpl implements TripService {
         try {
             tripDao.updateTrip(trip);
         } catch (EmptyResultDataAccessException e) {
-            LOGGER.debug("updateTrip({}), Exception:{}", trip, e.toString());
+            LOGGER.error("updateTrip({}), Exception:{}", trip, e.toString());
         }
     }
 

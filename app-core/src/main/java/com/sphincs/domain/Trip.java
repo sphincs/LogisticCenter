@@ -1,9 +1,7 @@
 package com.sphincs.domain;
 
 import javax.persistence.*;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.util.Date;
 
 @Entity
@@ -16,36 +14,40 @@ public class Trip {
     private Long id;
 
     @Size(min = 2, max = 100,
-            message = "Driver's name must be between 2 and 100 characters of roman alphabet. Space is allow")
-    @Pattern(regexp = "^[a-zA-Z][a-zA-Z\\s]+")
+            message = "Driver's name must be between 2 and 100 characters of roman alphabet. Space is allow. ")
+    @Pattern(regexp = "^[a-zA-Z][a-zA-Z\\s]+",
+            message = "Driver's name must contain only roman letters. ")
     @Column(name = "tripdriver")
     private String driverName;
 
     @Size(min = 2, max = 20,
-            message = "Car's name must be between 2 and 20 characters of roman alphabet. Space is allow")
-    @Pattern(regexp = "^[a-zA-Z][a-zA-Z\\s]+")
+            message = "Car's name must be between 2 and 20 characters of roman alphabet. Space is allow. ")
+    @Pattern(regexp = "^[a-zA-Z][a-zA-Z\\s]+",
+            message = "Car's name must contain only roman letters. ")
     @Column(name = "car")
     private String car;
 
     @Min(value = 1,
-            message = "Fuelrate must be at least 1 liter per 100 km")
+            message = "Fuel rate must be at least 1 liter per 100 km. ")
     @Column(name = "fuelrate")
     private Double fuelRate100;
 
     @Size(min = 2, max = 20,
-            message = "City name must be between 2 and 20 characters of roman alphabet. Space is allow")
-    @Pattern(regexp = "^[a-zA-Z][a-zA-Z\\s]+")
+            message = "Start point must be between 2 and 20 characters of roman alphabet. Space is allow. ")
+    @Pattern(regexp = "^[a-zA-Z][a-zA-Z\\s]+",
+            message = "Start point must contain only roman letters. ")
     @Column(name = "startpoint")
     private String startPoint;
 
     @Size(min = 2, max = 20,
-            message = "City name must be between 2 and 20 characters of roman alphabet. Space is allow")
-    @Pattern(regexp = "^[a-zA-Z][a-zA-Z\\s]+")
+            message = "End point must be between 2 and 20 characters of roman alphabet. Space is allow. ")
+    @Pattern(regexp = "^[a-zA-Z][a-zA-Z\\s]+",
+            message = "End point must contain only roman letters. ")
     @Column(name = "endpoint")
     private String endPoint;
 
-    @Pattern(regexp = "^[1-9][0-9]{0,4}]",
-            message = "Distance must be between 1 and 5 numerics")
+    @Pattern(regexp = "^[1-9][0-9]{0,4}",
+            message = "Distance must be between 1 and 5 numerics. ")
     @Column(name = "distance")
     private String distance;
 
@@ -55,7 +57,6 @@ public class Trip {
     @Column(name = "enddate")
     private Date endDate;
 
-    @Pattern(regexp = "^[0-9]*\\.[0-9]{2}")
     @Column(name = "sumfuel")
     private String sumFuel;
 

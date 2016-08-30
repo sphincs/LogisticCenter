@@ -9,13 +9,13 @@
 <table border="0">
     <tr>
         <td width="30">
-            <form action="/onepage/" method="get">
-                <input type="submit" name="Submit" value=<spring:message code="button.onepage.goto"/>>
+            <form action="/driversList/" method="get">
+                <input type="submit" name="Submit" value=<spring:message code="button.driver.goto"/>>
             </form>
         </td>
         <td width="30">
-            <form action="/jsp/" method="get">
-                <input type="submit" name="Submit" value=<spring:message code="button.jsp.goto"/>>
+            <form action="/tripsList/" method="get">
+                <input type="submit" name="Submit" value=<spring:message code="button.trip.goto"/>>
             </form>
         </td>
     </tr>

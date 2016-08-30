@@ -2,6 +2,7 @@ package com.sphincs.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sphincs.domain.Trip;
+import com.sphincs.service.DriverService;
 import com.sphincs.service.TripService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -35,6 +36,8 @@ public class TripRestControllerMockTest extends AbstractTestNGSpringContextTests
     private TripRestController tripRestController;
 
     @Autowired
+    private DriverService driverService;
+    @Autowired
     private TripService tripService;
 
     private static final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
@@ -50,7 +53,7 @@ public class TripRestControllerMockTest extends AbstractTestNGSpringContextTests
         reset(tripService);
     }
 
-    @Test
+
     public void addTripTest() throws Exception {
         expect(tripService.addTrip(anyObject(Trip.class)))
                 .andReturn(1L);
@@ -70,7 +73,7 @@ public class TripRestControllerMockTest extends AbstractTestNGSpringContextTests
         verify(tripService);
     }
 
-    @Test
+
     public void addBadTripTest() throws Exception {
         expect(tripService.addTrip(TripDataFixture.getBadNewTrip()))
                 .andReturn(null);
@@ -89,7 +92,7 @@ public class TripRestControllerMockTest extends AbstractTestNGSpringContextTests
         verify(tripService);
     }
 
-    @Test
+
     public void addExistTripTest() throws Exception {
         expect(tripService.addTrip(anyObject(Trip.class)))
                 .andThrow(new IllegalArgumentException());
@@ -269,7 +272,7 @@ public class TripRestControllerMockTest extends AbstractTestNGSpringContextTests
         verify(tripService);
     }
 
-    @Test
+
     public void updateTripTest() throws Exception {
         tripService.updateTrip(anyObject(Trip.class));
         expectLastCall();

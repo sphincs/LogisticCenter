@@ -6,8 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Controller
@@ -19,15 +21,16 @@ public class DriverRestController {
 
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<Long> addDriver(@RequestBody Driver driver) {
+    public ResponseEntity<Long> addDriver(@Valid @RequestBody final Driver driver, final BindingResult result) {
+        if (result.hasErrors()) return new ResponseEntity(result.getAllErrors(), HttpStatus.BAD_REQUEST);
         try {
             Long driverId = driverService.addDriver(driver);
             if (driverId == null) {
-                return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
+                return new ResponseEntity("Driver = null", HttpStatus.BAD_REQUEST);
             }
             return new ResponseEntity(driverId, HttpStatus.CREATED);
         } catch (Exception e) {
-            return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -42,7 +45,7 @@ public class DriverRestController {
     @RequestMapping(value = "/remove/{id}", method = RequestMethod.DELETE)
     public ResponseEntity removeDriver(@PathVariable Long id) {
         driverService.removeDriver(id);
-        return new ResponseEntity("", HttpStatus.OK);
+        return new ResponseEntity("{}", HttpStatus.OK);
     }
 
 
@@ -70,12 +73,14 @@ public class DriverRestController {
 
     @ResponseBody
     @RequestMapping(method = RequestMethod.PUT)
-    public ResponseEntity updateDriver(@RequestBody Driver driver) {
+    public ResponseEntity updateDriver(@Valid @RequestBody final Driver driver, final BindingResult result) {
+        if (result.hasErrors()) return new ResponseEntity(result.getAllErrors(), HttpStatus.BAD_REQUEST);
         try {
             driverService.updateDriver(driver);
-            return new ResponseEntity("", HttpStatus.OK);
+            return new ResponseEntity("{}", HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
 }
