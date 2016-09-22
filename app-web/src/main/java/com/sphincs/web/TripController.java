@@ -46,14 +46,14 @@ public class TripController {
     }
 
     @RequestMapping("/submitTripData")
-    public ModelAndView getInputFormView(   @RequestParam("DriverName") String driverName,
-                                            @RequestParam("Car") String car,
-                                            @RequestParam("FuelRate100") Double fuelRate100,
-                                            @RequestParam("StartPoint") String startPoint,
-                                            @RequestParam("EndPoint") String endPoint,
-                                            @RequestParam("Distance") String distance,
-                                            @RequestParam("StartDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
-                                            @RequestParam("EndDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate) throws ParseException {
+    public ModelAndView getInputFormView(@RequestParam("DriverName") String driverName,
+                                         @RequestParam("Car") String car,
+                                         @RequestParam("FuelRate100") Double fuelRate100,
+                                         @RequestParam("StartPoint") String startPoint,
+                                         @RequestParam("EndPoint") String endPoint,
+                                         @RequestParam("Distance") String distance,
+                                         @RequestParam("StartDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
+                                         @RequestParam("EndDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate) throws ParseException {
         LOGGER.debug("add new trip");
         Trip trip = checkTripFields(new Trip(), driverName, car, fuelRate100, startPoint, endPoint, distance, startDate, endDate);
         if (trip != null) {
@@ -102,15 +102,15 @@ public class TripController {
     }
 
     @RequestMapping(value = "/tripUpdate")
-    public ModelAndView updateDriver(   @RequestParam("Id") Long tripId,
-                                        @RequestParam("DriverName") String driverName,
-                                        @RequestParam("Car") String car,
-                                        @RequestParam("FuelRate100") Double fuelRate100,
-                                        @RequestParam("StartPoint") String startPoint,
-                                        @RequestParam("EndPoint") String endPoint,
-                                        @RequestParam("Distance") String distance,
-                                        @RequestParam("StartDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
-                                        @RequestParam("EndDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate) throws ParseException {
+    public ModelAndView updateDriver(@RequestParam("Id") Long tripId,
+                                     @RequestParam("DriverName") String driverName,
+                                     @RequestParam("Car") String car,
+                                     @RequestParam("FuelRate100") Double fuelRate100,
+                                     @RequestParam("StartPoint") String startPoint,
+                                     @RequestParam("EndPoint") String endPoint,
+                                     @RequestParam("Distance") String distance,
+                                     @RequestParam("StartDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
+                                     @RequestParam("EndDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate) throws ParseException {
         LOGGER.debug("update trip with id = " + tripId);
         Trip trip = tripService.getTripById(tripId);
         trip = checkTripFields(trip, driverName, car, fuelRate100, startPoint, endPoint, distance, startDate, endDate);
@@ -130,7 +130,7 @@ public class TripController {
     @RequestMapping(value = "/tripCountFuelDate")
     public ModelAndView countFuelByDateView(@RequestParam("StartDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
                                             @RequestParam("EndDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate)
-                                            throws ParseException {
+            throws ParseException {
         LOGGER.debug(String.format("get sumFuel between dates %s - %s", format.format(startDate), format.format(endDate)));
         try {
             List<Trip> trips = tripService.getTripsByDate(startDate, endDate);
@@ -144,7 +144,7 @@ public class TripController {
             result.put("sum", String.format("%.2f", sum));
             result.put("trips", trips);
             return new ModelAndView("summaryByDates", "result", result);
-        } catch (Exception e)  {
+        } catch (Exception e) {
             return getErrorPage("Введены некорректные данные. Проверьте правильность ввода");
         }
     }

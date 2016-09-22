@@ -30,9 +30,6 @@ public class DriverDaoImpl implements DriverDao {
     private static final String DRIVER_ID = "driverid";
     private static final String NAME = "drivername";
     private static final String AGE = "age";
-    private static final String CAR = "car";
-    private static final String CAR_NUMBER = "carnumber";
-    private static final String FUEL_RATE = "fuelrate";
 
 
     @Value("#{T(org.apache.commons.io.IOUtils).toString((new org.springframework.core.io.ClassPathResource('${add_driver_path}')).inputStream)}")

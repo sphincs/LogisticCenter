@@ -2,7 +2,6 @@ package com.sphincs.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sphincs.domain.Trip;
-import com.sphincs.service.DriverService;
 import com.sphincs.service.TripService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -35,8 +34,6 @@ public class TripRestControllerMockTest extends AbstractTestNGSpringContextTests
     @Resource
     private TripRestController tripRestController;
 
-    @Autowired
-    private DriverService driverService;
     @Autowired
     private TripService tripService;
 

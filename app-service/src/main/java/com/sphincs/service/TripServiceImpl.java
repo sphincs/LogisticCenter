@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -18,6 +19,7 @@ import java.util.List;
 public class TripServiceImpl implements TripService {
 
     public static final Logger LOGGER = LogManager.getLogger();
+    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 
     @Autowired
     private TripDao tripDao;
@@ -56,13 +58,17 @@ public class TripServiceImpl implements TripService {
         List<Trip> existingTrips = tripDao.getTripsByRoute(trip.getStartPoint(), trip.getEndPoint());
 
         for (Trip current : existingTrips) {
+            String start_existing = format.format(trip.getStartDate());
+            String start_new = format.format(current.getStartDate());
+            String end_existing = format.format(trip.getEndDate());
+            String end_new = format.format(current.getEndDate());
             if (current.getDriverName().equals(trip.getDriverName()) &&
                     current.getCar().equals(trip.getCar()) &&
                     current.getFuelRate100().equals(trip.getFuelRate100()) &&
                     current.getDistance().equals(trip.getDistance()) &&
-                    current.getStartDate().equals(trip.getStartDate()) &&
-                    current.getEndDate().equals(trip.getEndDate()) &&
-                    current.getSumFuel().equals(trip.getSumFuel())) {
+                    start_existing.equals(start_new) &&
+                    end_existing.equals(end_new) &&
+                    current.getSumFuel().replace(',', '.').equals(trip.getSumFuel().substring(0, 5))) {
                 return true;
             }
         }

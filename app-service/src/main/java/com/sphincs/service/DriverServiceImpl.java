@@ -19,6 +19,7 @@ import java.util.List;
 public class DriverServiceImpl implements DriverService {
 
     public static final Logger LOGGER = LogManager.getLogger();
+
     @Autowired
     private DriverDao driverDao;
 

@@ -73,9 +73,6 @@ public class TripDaoImpl implements TripDao {
     @Autowired
     private DataSource dataSource;
 
-    @Autowired
-    private DriverDao driverDao;
-
     private JdbcTemplate jdbcTemplate;
     private NamedParameterJdbcTemplate namedJdbcTemplate;
 

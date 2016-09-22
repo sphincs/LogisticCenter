@@ -5,13 +5,14 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "DRIVERS", uniqueConstraints = @UniqueConstraint(columnNames = {"driverid", "drivername", "carnumber"}))
-public class Driver {
+public class Driver implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "driverid")
     private Long id;
 
@@ -19,7 +20,7 @@ public class Driver {
             message = "Driver's name must be between 2 and 100 characters of roman alphabet. Space is allow. ")
     @Pattern(regexp = "^[a-zA-Z][a-zA-Z\\s]+",
             message = "Driver's name must contain only roman letters. ")
-    @Column(name = "drivername")
+    @Column(name = "drivername", updatable = false)
     private String name;
 
     @Min(value = 18,
@@ -29,13 +30,21 @@ public class Driver {
     @Column(name = "age")
     private Integer age;
 
+    @SuppressWarnings("UnusedDeclaration")
     public Driver() {
     }
 
+    @SuppressWarnings("UnusedDeclaration")
     public Driver(Long id, String name, Integer age) {
-        this.id = id;
-        this.name = name;
-        this.age = age;
+        this.setId(id);
+        this.setName(name);
+        this.setAge(age);
+    }
+
+    public Driver(String name, Integer age) {
+        this.setId(-1L);
+        this.setName(name);
+        this.setAge(age);
     }
 
     public Long getId() {
