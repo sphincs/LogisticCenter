@@ -24,11 +24,8 @@ public class DriverRestController {
     public ResponseEntity<Long> addDriver(@Valid @RequestBody final Driver driver, final BindingResult result) {
         if (result.hasErrors()) return new ResponseEntity(result.getAllErrors(), HttpStatus.BAD_REQUEST);
         try {
-            Long driverId = driverService.addDriver(driver);
-            if (driverId == null) {
-                return new ResponseEntity("Driver = null", HttpStatus.BAD_REQUEST);
-            }
-            return new ResponseEntity(driverId, HttpStatus.CREATED);
+            driverService.save(driver);
+            return new ResponseEntity("{}", HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -37,14 +34,14 @@ public class DriverRestController {
     @ResponseBody
     @RequestMapping(value = "/all", method = RequestMethod.GET)
     public ResponseEntity<List<Driver>> getAllDrivers() {
-        List<Driver> drivers = driverService.getAllDrivers();
+        List<Driver> drivers = driverService.findAll();
         return new ResponseEntity(drivers, HttpStatus.OK);
     }
 
     @ResponseBody
     @RequestMapping(value = "/remove/{id}", method = RequestMethod.DELETE)
     public ResponseEntity removeDriver(@PathVariable Long id) {
-        driverService.removeDriver(id);
+        driverService.delete(id);
         return new ResponseEntity("{}", HttpStatus.OK);
     }
 
@@ -52,7 +49,7 @@ public class DriverRestController {
     @ResponseBody
     @RequestMapping(value = "/id/{id}", method = RequestMethod.GET)
     public ResponseEntity<Driver> getDriverById(@PathVariable Long id) {
-        Driver driver = driverService.getDriverById(id);
+        Driver driver = driverService.findOne(id);
         if (driver == null) {
             return new ResponseEntity("Driver with id = " + id + " not found.", HttpStatus.NOT_FOUND);
         } else {
@@ -63,7 +60,7 @@ public class DriverRestController {
     @ResponseBody
     @RequestMapping(value = "/name/{name}", method = RequestMethod.GET)
     public ResponseEntity<Driver> getDriverByName(@PathVariable String name) {
-        Driver driver = driverService.getDriverByName(name);
+        Driver driver = driverService.findByName(name);
         if (driver == null) {
             return new ResponseEntity("Driver with name = " + name + " not found.", HttpStatus.NOT_FOUND);
         } else {
@@ -76,7 +73,7 @@ public class DriverRestController {
     public ResponseEntity updateDriver(@Valid @RequestBody final Driver driver, final BindingResult result) {
         if (result.hasErrors()) return new ResponseEntity(result.getAllErrors(), HttpStatus.BAD_REQUEST);
         try {
-            driverService.updateDriver(driver);
+            driverService.save(driver);
             return new ResponseEntity("{}", HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);

@@ -1,73 +1,65 @@
 package com.sphincs.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import javax.persistence.*;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-import java.util.Date;
+import java.io.Serializable;
+import java.sql.Date;
 
 @Entity
-@Table(name = "TRIPS", uniqueConstraints = @UniqueConstraint(columnNames = {"tripid"}))
-public class Trip {
+@Table
+public class Trip implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "tripid")
     private Long id;
 
     @Size(min = 2, max = 100,
             message = "Driver's name must be between 2 and 100 characters of roman alphabet. Space is allow. ")
     @Pattern(regexp = "^[a-zA-Z][a-zA-Z\\s]+",
-            message = "Driver's name must contain only roman letters. ")
-    @Column(name = "tripdriver")
+            message = "Driver's name must contains only roman letters. ")
     private String driverName;
 
     @Size(min = 2, max = 20,
             message = "Car's name must be between 2 and 20 characters of roman alphabet. Space is allow. ")
-    @Pattern(regexp = "^[a-zA-Z][a-zA-Z\\s]+",
-            message = "Car's name must contain only roman letters. ")
-    @Column(name = "car")
+    @Pattern(regexp = "^[a-zA-Z][a-zA-Z0-9\\s]+",
+            message = "Car's name must contains only roman letters and numbers. ")
     private String car;
 
-    @Min(value = 1,
-            message = "Fuel rate must be at least 1 liter per 100 km. ")
-    @Column(name = "fuelrate")
+    @FuelRate
     private Double fuelRate100;
 
     @Size(min = 2, max = 20,
             message = "Start point must be between 2 and 20 characters of roman alphabet. Space is allow. ")
     @Pattern(regexp = "^[a-zA-Z][a-zA-Z\\s]+",
             message = "Start point must contain only roman letters. ")
-    @Column(name = "startpoint")
     private String startPoint;
 
     @Size(min = 2, max = 20,
             message = "End point must be between 2 and 20 characters of roman alphabet. Space is allow. ")
     @Pattern(regexp = "^[a-zA-Z][a-zA-Z\\s]+",
-            message = "End point must contain only roman letters. ")
-    @Column(name = "endpoint")
+            message = "End point must contains only roman letters. ")
     private String endPoint;
 
     @Pattern(regexp = "^[1-9][0-9]{0,4}",
             message = "Distance must be between 1 and 5 numerics. ")
-    @Column(name = "distance")
     private String distance;
 
-    @Column(name = "startdate")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.DATE_FORMAT)
     private Date startDate;
 
-    @Column(name = "enddate")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.DATE_FORMAT)
     private Date endDate;
 
-    @Column(name = "sumfuel")
     private String sumFuel;
 
     public Trip() {
     }
 
-    public Trip(Long id, String driverName, String car, Double fuelRate100, String startPoint,
+    public Trip(String driverName, String car, Double fuelRate100, String startPoint,
                 String endPoint, String distance, Date startDate, Date endDate) {
-        this.id = id;
         this.driverName = driverName;
         this.car = car;
         this.fuelRate100 = fuelRate100;

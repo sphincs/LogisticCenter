@@ -6,15 +6,16 @@ import java.util.List;
 
 public interface DriverService {
 
-    Long addDriver(Driver driver);
+    void save(Driver driver);
 
-    List<Driver> getAllDrivers();
+    List<Driver> findAll();
 
-    void removeDriver(Long id);
+    Driver findOne(Long id);
 
-    Driver getDriverById(Long id);
+    long count();
 
-    Driver getDriverByName(String name);
+    Driver findByName(String name);
 
-    void updateDriver(Driver driver);
+    void delete(Long id);
+
 }

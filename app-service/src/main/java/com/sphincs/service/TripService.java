@@ -2,27 +2,27 @@ package com.sphincs.service;
 
 import com.sphincs.domain.Trip;
 
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 
 public interface TripService {
 
-    Long addTrip(Trip trip);
+    void save(Trip trip);
 
-    List<Trip> getAllTrips();
+    List<Trip> findAll();
 
-    void removeTrip(Long id);
+    Trip findById(Long id);
 
-    Trip getTripById(Long id);
+    long count();
 
-    List<Trip> getTripsByDriver(String name);
+    void delete(Long id);
 
-    List<Trip> getTripsByCar(String car);
+    List<Trip> findByDriverName(String driverName);
 
-    List<Trip> getTripsByRoute(String startPoint, String endPoint);
+    List<Trip> findByCar(String car);
 
-    List<Trip> getTripsByDate(Date startDate, Date endDate);
+    List<Trip> findByStartPointAndEndPoint(String startPoint, String endPoint);
 
-    void updateTrip(Trip trip);
+    List<Trip> findByStartDateAndEndDate(Date startDate, Date endDate);
 
 }
