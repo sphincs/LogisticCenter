@@ -1,1 +1,0 @@
-UPDATE DRIVERS SET drivername = :drivername, age = :age WHERE driverid = :driverid
