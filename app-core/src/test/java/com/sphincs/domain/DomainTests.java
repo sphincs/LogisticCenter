@@ -8,7 +8,8 @@ import java.text.ParseException;
 
 public class DomainTests {
 
-    Driver driver;
+    private Driver driver;
+    private Trip trip;
 
     @Test
     public void DriverFieldsTest() {
@@ -22,7 +23,6 @@ public class DomainTests {
 
     @Test
     public void DriverEqualsTest() {
-
         driver = new Driver();
 
         Driver driver1 = new Driver("Vasili Ivanych", 48);
@@ -36,9 +36,6 @@ public class DomainTests {
         Assert.assertFalse(driver3.equals(driver2));
         Assert.assertFalse(driver1.equals(driver3));
     }
-
-
-    private Trip trip;
 
     @Test
     public void TripFieldsTest() throws ParseException {

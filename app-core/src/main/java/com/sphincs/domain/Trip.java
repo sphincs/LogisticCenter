@@ -25,7 +25,7 @@ public class Trip implements Serializable {
     @Size(min = 2, max = 20,
             message = "Car's name must be between 2 and 20 characters of roman alphabet. Space is allow. ")
     @Pattern(regexp = "^[a-zA-Z][a-zA-Z0-9\\s]+",
-            message = "Car's name must contains only roman letters and numbers. ")
+            message = "Car's name must contains roman letters and also may contains numbers with roman letters. ")
     private String car;
 
     @FuelRate
@@ -192,4 +192,5 @@ public class Trip implements Serializable {
                 ", sumFuel=" + sumFuel +
                 '}';
     }
+
 }

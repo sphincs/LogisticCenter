@@ -77,7 +77,7 @@ public class Driver implements Serializable {
 
     @Override
     public String toString() {
-        return "Trip: {" +
+        return "Driver: {" +
                 "id=" + id +
                 "name=" + name +
                 ", age=" + age +
