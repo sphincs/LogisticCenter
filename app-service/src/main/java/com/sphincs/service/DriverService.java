@@ -6,11 +6,11 @@ import java.util.List;
 
 public interface DriverService {
 
-    void save(Driver driver);
+    Driver save(Driver driver);
 
     List<Driver> findAll();
 
-    Driver findOne(Long id);
+    Driver findById(Long id);
 
     long count();
 

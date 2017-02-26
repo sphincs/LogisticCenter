@@ -4,10 +4,11 @@ import com.sphincs.domain.Trip;
 
 import java.sql.Date;
 import java.util.List;
+import java.util.Map;
 
 public interface TripService {
 
-    void save(Trip trip);
+    Trip save(Trip trip);
 
     List<Trip> findAll();
 
@@ -25,4 +26,7 @@ public interface TripService {
 
     List<Trip> findByStartDateAndEndDate(Date startDate, Date endDate);
 
+    Map<String, Object> countFuelByDriver(String name);
+
+    Map<String, Object> countFuelByDate(String startDate, String endDate);
 }
