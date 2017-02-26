@@ -8,26 +8,27 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.sql.Date;
 import java.text.ParseException;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
+import static org.springframework.http.ResponseEntity.ok;
 
 @Controller
 @RequestMapping("/trips")
 public class TripRestController {
 
-    @Autowired
-    private DriverService driverService;
+    private final DriverService driverService;
+    private final TripService tripService;
 
     @Autowired
-    private TripService tripService;
+    public TripRestController(DriverService driverService, TripService tripService) {
+        this.driverService = driverService;
+        this.tripService = tripService;
+    }
 
     @ResponseBody
     @RequestMapping(value = "/autofill", method = RequestMethod.GET)
@@ -55,68 +56,26 @@ public class TripRestController {
 
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<Long> addTrip(@Valid @RequestBody final Trip trip, final BindingResult result) {
-        if (result.hasErrors()) return new ResponseEntity(result.getAllErrors(), HttpStatus.BAD_REQUEST);
-        String driverName = trip.getDriverName();
-        Date start = trip.getStartDate();
-        Date end = trip.getEndDate();
-        try {
-            if (driverService.findByName(trip.getDriverName()) == null) {
-                return new ResponseEntity(Collections.singletonMap("defaultMessage",
-                        Collections.singletonMap("defaultMessage", "This driver not exist. ")), HttpStatus.BAD_REQUEST);
-            }
-            if (trip.getStartDate().after(trip.getEndDate()))
-                return new ResponseEntity(Collections.singletonMap("defaultMessage",
-                        Collections.singletonMap("defaultMessage", "Check the dates, please. ")), HttpStatus.BAD_REQUEST);
-            if (isDriverFree(driverName, start, end)) {
-                tripService.save(trip);
-                return new ResponseEntity("{}", HttpStatus.CREATED);
-            } else return new ResponseEntity(Collections.singletonMap("defaultMessage",
-                    Collections.singletonMap("defaultMessage", "This driver not available in this dates. ")), HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
-            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    private boolean isDriverFree(String driverName, Date start, Date end) {
-        List<Trip> trips = tripService.findByDriverName(driverName);
-        if (trips.isEmpty()) return true;
-        for (Trip current : trips) {
-            if ((start.after(current.getStartDate()) && start.before(current.getEndDate())) ||
-                    (end.after(current.getStartDate()) && end.before(current.getEndDate()))) {
-                return false;
-            }
-        }
-        return true;
+    public ResponseEntity<Long> addTrip(@Valid @RequestBody final Trip trip) {
+        return new ResponseEntity<>(tripService.save(trip).getId(), HttpStatus.CREATED);
     }
 
     @ResponseBody
-    @RequestMapping(value = "/all", method = RequestMethod.GET)
+    @RequestMapping(value = "/", method = RequestMethod.GET)
     public ResponseEntity<List<Trip>> getAllTrips() {
-        List<Trip> trips = tripService.findAll();
-        return new ResponseEntity(trips, HttpStatus.OK);
+        return ok(tripService.findAll());
     }
 
     @ResponseBody
     @RequestMapping(value = "/id/{id}", method = RequestMethod.GET)
     public ResponseEntity<Trip> getTripById(@PathVariable Long id) {
-        Trip trip = tripService.findById(id);
-        if (trip == null) {
-            return new ResponseEntity("Trip with id = " + id + " not found. ", HttpStatus.NOT_FOUND);
-        } else {
-            return new ResponseEntity(trip, HttpStatus.OK);
-        }
+        return ok(tripService.findById(id));
     }
 
     @ResponseBody
     @RequestMapping(value = "/driver/{name}", method = RequestMethod.GET)
     public ResponseEntity<List<Trip>> getTripsByDriver(@PathVariable String name) {
-        List<Trip> trips = tripService.findByDriverName(name);
-        if (trips == null) {
-            return new ResponseEntity("Trips with driverName = " + name + " not found.", HttpStatus.NOT_FOUND);
-        } else {
-            return new ResponseEntity(trips, HttpStatus.OK);
-        }
+        return ok(tripService.findByDriverName(name));
     }
 
     @ResponseBody
@@ -124,55 +83,27 @@ public class TripRestController {
     public ResponseEntity<List<Trip>> getTripsByRoute(
             @PathVariable String startPoint,
             @PathVariable String endPoint) {
-        List<Trip> trips = tripService.findByStartPointAndEndPoint(startPoint, endPoint);
-        if (trips == null) {
-            return new ResponseEntity(String.format("Trips with route form %s to %s not found. ", startPoint, endPoint),
-                    HttpStatus.NOT_FOUND);
-        } else {
-            return new ResponseEntity(trips, HttpStatus.OK);
-        }
+        return ok(tripService.findByStartPointAndEndPoint(startPoint, endPoint));
     }
 
     @ResponseBody
     @RequestMapping(value = "/car/{car}", method = RequestMethod.GET)
     public ResponseEntity<List<Trip>> getTripsByCar(@PathVariable String car) {
-        List<Trip> trips = tripService.findByCar(car);
-        if (trips == null) {
-            return new ResponseEntity(String.format("Trips with car = %s not found. ", car), HttpStatus.NOT_FOUND);
-        } else {
-            return new ResponseEntity(trips, HttpStatus.OK);
-        }
+        return ok(tripService.findByCar(car));
     }
 
     @ResponseBody
-    @RequestMapping(value = "/remove/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public ResponseEntity removeTrip(@PathVariable Long id) {
         tripService.delete(id);
-        return new ResponseEntity("", HttpStatus.OK);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     @ResponseBody
     @RequestMapping(method = RequestMethod.PUT)
-    public ResponseEntity updateTrip(@Valid @RequestBody final Trip trip, final BindingResult result) {
-        if (result.hasErrors()) return new ResponseEntity(result.getAllErrors(), HttpStatus.BAD_REQUEST);
-        String driverName = trip.getDriverName();
-        Date start = trip.getStartDate();
-        Date end = trip.getEndDate();
-        try {
-            if (driverService.findByName(trip.getDriverName()) == null)
-                return new ResponseEntity(Collections.singletonMap("defaultMessage",
-                        Collections.singletonMap("defaultMessage", "This driver not exist. ")), HttpStatus.BAD_REQUEST);
-            if (trip.getStartDate().after(trip.getEndDate()))
-                return new ResponseEntity(Collections.singletonMap("defaultMessage",
-                        Collections.singletonMap("defaultMessage", "Check the dates, please. ")), HttpStatus.BAD_REQUEST);
-            if (isDriverFree(driverName, start, end)) {
-                tripService.save(trip);
-                return new ResponseEntity("{}", HttpStatus.OK);
-            } else return new ResponseEntity(Collections.singletonMap("defaultMessage",
-                    Collections.singletonMap("defaultMessage", "This driver not available in this dates. ")), HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
-            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity updateTrip(@Valid @RequestBody final Trip trip) {
+        tripService.save(trip);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
     @ResponseBody
@@ -180,56 +111,20 @@ public class TripRestController {
     public ResponseEntity<List<Trip>> getTripsByDate(
             @PathVariable String startDate,
             @PathVariable String endDate) throws ParseException {
-        Date start = Date.valueOf(startDate);
-        Date end = Date.valueOf(endDate);
-        List<Trip> trips = tripService.findByStartDateAndEndDate(start, end);
-        if (trips.isEmpty()) {
-            return new ResponseEntity(String.format("Trips with date from %s to %s not found. ",
-                    startDate,
-                    endDate),
-                    HttpStatus.NOT_FOUND);
-        } else {
-            return new ResponseEntity(trips, HttpStatus.OK);
-        }
+        return ok(tripService.findByStartDateAndEndDate(Date.valueOf(startDate), Date.valueOf(endDate)));
     }
 
     @ResponseBody
     @RequestMapping(value = "/sumFuel/driver/{name}", method = RequestMethod.GET)
     public ResponseEntity countFuelByDriver(@PathVariable String name) {
-        Driver driver = driverService.findByName(name);
-        if (driver != null) {
-            List<Trip> trips = tripService.findByDriverName(name);
-            Double sum = 0d;
-            for (Trip current : trips) {
-                sum += Double.parseDouble(current.getSumFuel().replace(',', '.'));
-            }
-            Map<String, Object> result = new HashMap<>();
-            result.put("driver", driver.getName());
-            result.put("sum", String.format("%.2f", sum));
-            result.put("trips", trips);
-            return new ResponseEntity(result, HttpStatus.OK);
-        } else return new ResponseEntity("Driver " + name + " not exist", HttpStatus.BAD_REQUEST);
+        return ok(tripService.countFuelByDriver(name));
     }
 
     @ResponseBody
     @RequestMapping(value = "/sumFuel/date/{startDate}/{endDate}", method = RequestMethod.GET)
     public ResponseEntity countFuelByDate(@PathVariable String startDate,
-                                          @PathVariable String endDate) throws ParseException {
-        Date start = Date.valueOf(startDate);
-        Date end = Date.valueOf(endDate);
-        List<Trip> trips = tripService.findByStartDateAndEndDate(start, end);
-        Double sum = 0d;
-        Map<String, Object> result = new HashMap<>();
-        result.put("startDate", startDate);
-        result.put("endDate", endDate);
-        if (!trips.isEmpty()) {
-            for (Trip current : trips) {
-                sum += Double.parseDouble(current.getSumFuel().replace(',', '.'));
-            }
-        }
-        result.put("sum", String.format("%.2f", sum));
-        result.put("trips", trips);
-        return new ResponseEntity(result, HttpStatus.OK);
+                                          @PathVariable String endDate) {
+        return ok(tripService.countFuelByDate(startDate, endDate));
     }
 
 }
