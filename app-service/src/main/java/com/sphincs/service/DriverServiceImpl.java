@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.sphincs.dao.DriverRepository;
 import com.sphincs.domain.Driver;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,13 +12,16 @@ import java.util.List;
 @Service
 public class DriverServiceImpl implements DriverService {
 
-    @Autowired
-    private DriverRepository driverRepository;
+    private final DriverRepository driverRepository;
 
+    @Autowired
+    public DriverServiceImpl(DriverRepository driverRepository) {
+        this.driverRepository = driverRepository;
+    }
 
     @Override
-    public void save(Driver driver) {
-        driverRepository.save(driver);
+    public Driver save(Driver driver) {
+        return driverRepository.save(driver);
     }
 
     @Override
@@ -26,8 +30,9 @@ public class DriverServiceImpl implements DriverService {
     }
 
     @Override
-    public Driver findOne(Long id) {
-        return driverRepository.findOne(id);
+    public Driver findById(Long id) {
+        return driverRepository.findById(id)
+                .orElseThrow(() -> notFoundException("id", id.toString()));
     }
 
     @Override
@@ -37,12 +42,17 @@ public class DriverServiceImpl implements DriverService {
 
     @Override
     public Driver findByName(String name) {
-        return driverRepository.findByName(name);
+        return driverRepository.findByName(name)
+                .orElseThrow(() -> notFoundException("name", name));
     }
 
     @Override
     public void delete(Long id) {
         driverRepository.delete(id);
+    }
+
+    private LogisticException notFoundException(String param, String value) {
+        return new LogisticException(String.format("Driver with %s = %s not found.", param, value), HttpStatus.OK);
     }
 
 }
