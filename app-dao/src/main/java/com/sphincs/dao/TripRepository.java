@@ -5,8 +5,12 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.sql.Date;
 import java.util.List;
+import java.util.Optional;
 
 public interface TripRepository extends CrudRepository<Trip, Long> {
+
+    Optional<Trip> findById(Long id);
+
     List<Trip> findByDriverName(String driverName);
 
     List<Trip> findByCar(String car);
