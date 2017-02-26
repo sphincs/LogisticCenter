@@ -110,7 +110,7 @@
     var displayDrivers = function() {
         $.ajax({
             method          : "GET",
-            url             : 'http://localhost:8080/drivers/all/',
+            url             : 'http://localhost:8080/drivers/',
             contentType     : "application/json; charset=utf-8",
             processData     : false,
             dataType        : 'json',
@@ -140,7 +140,7 @@
         var id = $(this).data('id');
         $.ajax({
             method          : "DELETE",
-            url             : "http://localhost:8080/drivers/remove/"+ id,
+            url             : "http://localhost:8080/drivers/"+ id,
             contentType     : "application/json; charset=utf-8",
             processData     : false,
             dataType        : 'json',
@@ -154,7 +154,7 @@
         var id = $(this).data('id');
         $.ajax({
             method          : "GET",
-            url             : "http://localhost:8080/drivers/id/"+ id,
+            url             : "http://localhost:8080/drivers/"+ id,
             contentType     : "application/json; charset=utf-8",
             processData     : false,
             dataType        : 'json',
@@ -227,9 +227,7 @@
     });
 
     var displayDriverErrors = function(data) {
-        $.each(data.responseJSON, function (index, value) {
-            $("#driver_error").append(value.defaultMessage);
-        });
+        $("#driver_error").append(data.responseJSON.message);
     };
 
     /*      For Trips       */
@@ -237,7 +235,7 @@
     var displayTrips = function() {
         $.ajax({
             method: "GET",
-            url: 'http://localhost:8080/trips/all/',
+            url: 'http://localhost:8080/trips/',
             contentType: "application/json; charset=utf-8",
             processData: false,
             dataType: 'json',
@@ -381,10 +379,7 @@
     });
 
     var displayTripErrors = function(data) {
-        $.each(data.responseJSON, function (index, value) {
-            console.log(value.defaultMessage);
-            $("#trip_error").append(value.defaultMessage);
-        });
+        $("#trip_error").append(data.responseJSON.message);
     };
 
     $("#fuel_by_driver").click(function() {
