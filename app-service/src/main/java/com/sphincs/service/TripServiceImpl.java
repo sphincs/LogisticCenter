@@ -110,7 +110,7 @@ public class TripServiceImpl implements TripService {
         List<Trip> trips = findByDriverName(driver.getName());
         if (trips.isEmpty()) return true;
         for (Trip current : trips) {
-            if (!(current.getId().equals(trip.getId()))
+            if ((current.getId() != trip.getId())
                     && ( (start.before(current.getStartDate()) && end.after(current.getStartDate()))
                         || (start.after(current.getStartDate()) && start.before(current.getEndDate())) )
                     ) {
