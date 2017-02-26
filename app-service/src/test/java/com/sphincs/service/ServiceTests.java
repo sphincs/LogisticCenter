@@ -23,7 +23,6 @@ public class ServiceTests {
 
     @Autowired
     private DriverService driverService;
-
     @Autowired
     private TripService tripService;
 
@@ -105,10 +104,10 @@ public class ServiceTests {
     @Test
     public void iUpdateTripTest() {
         Trip trip = tripService.findById(1L);
-        trip.setDriverName("Steven");
+        trip.setDriverName("Rob");
         trip.setEndPoint("Moscow");
         tripService.save(trip);
-        Assert.assertEquals("Moscow", tripService.findByDriverName("Steven").get(0).getEndPoint());
+        Assert.assertEquals("Moscow", tripService.findByDriverName("Rob").get(0).getEndPoint());
     }
 
     @Test
@@ -118,13 +117,12 @@ public class ServiceTests {
 
     @Test
     public void kGetTripsByStartPointAndEndPointTest() {
-        Assert.assertEquals("Steven", tripService.findByStartPointAndEndPoint("Brest", "Moscow").get(0).getDriverName());
-        Assert.assertTrue(tripService.findByStartPointAndEndPoint("Brest", "Karaganda").isEmpty());
+        Assert.assertEquals("Rob", tripService.findByStartPointAndEndPoint("Brest", "Moscow").get(0).getDriverName());
     }
 
     @Test
     public void lGetTripsByStartDateAndEndDateTest() throws ParseException {
-        Assert.assertEquals("Steven",tripService.findByStartDateAndEndDate(
+        Assert.assertEquals("Rob",tripService.findByStartDateAndEndDate(
                 Date.valueOf("2016-06-30"), Date.valueOf("2016-06-30")).get(0).getDriverName());
     }
 
