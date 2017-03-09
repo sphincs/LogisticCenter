@@ -1,9 +1,8 @@
 package com.sphincs.dao;
 
+import com.google.common.collect.Lists;
 import com.sphincs.domain.Driver;
 import com.sphincs.domain.Trip;
-import org.assertj.core.util.Lists;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -18,6 +17,8 @@ import javax.validation.ConstraintViolationException;
 import java.sql.Date;
 import java.text.ParseException;
 
+import static org.junit.Assert.*;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -28,29 +29,41 @@ public class DaoTests {
     @Autowired
     private TripRepository tripRepository;
 
+    private static Driver driver1;
+    private static Driver driver2;
+    private static Driver driver3;
+    private static Driver driver4;
+    private static Driver driver5;
+    private static Driver driver6;
+    private static Driver driver7;
+    private static Trip trip1;
+    private static Trip trip2;
+    private static Trip trip3;
+    private static Trip trip4;
+
     @Before
     public void setUpDatabase() throws ParseException {
         if (driverRepository.count() == 0) {
             fillDrivers();
             fillTrips();
-        }
+       }
     }
 
     private void fillDrivers() {
-        driverRepository.save(new Driver("Mike", 35));
-        driverRepository.save(new Driver("Bobby", 42));
-        driverRepository.save(new Driver("Spencer", 50));
-        driverRepository.save(new Driver("Misha", 36));
-        driverRepository.save(new Driver("Rob", 36));
-        driverRepository.save(new Driver("Boris", 37));
-        driverRepository.save(new Driver("Mitchel", 28));
+        driver1 = driverRepository.save(new Driver("Mike", 35));
+        driver2 = driverRepository.save(new Driver("Bobby", 42));
+        driver3 = driverRepository.save(new Driver("Misha", 36));
+        driver4 = driverRepository.save(new Driver("Boris", 37));
+        driver5 = driverRepository.save(new Driver("Spencer", 50));
+        driver6 = driverRepository.save(new Driver("Rob", 36));
+        driver7 = driverRepository.save(new Driver("Mitchel", 28));
     }
 
     private void fillTrips() throws ParseException {
-        tripRepository.save(new Trip("Mike", "DAF", 13.8, "Brest", "Minsk", "350", Date.valueOf("2016-06-30"), Date.valueOf("2016-06-30")));
-        tripRepository.save(new Trip("Bobby", "FORD", 7.5, "Moscow", "Astana", "2800", Date.valueOf("2016-06-30"), Date.valueOf("2016-07-02")));
-        tripRepository.save(new Trip("Misha", "BMW", 7.2, "Gomel", "Rome", "2530", Date.valueOf("2016-07-01"), Date.valueOf("2016-07-03")));
-        tripRepository.save(new Trip("Boris", "LADA", 5.5, "Chicago", "Dallas", "3000", Date.valueOf("2016-07-04"), Date.valueOf("2016-07-06")));
+        trip1 = tripRepository.save(new Trip(driver1, "DAF", 13.8, "Brest", "Minsk", "350", Date.valueOf("2016-06-30"), Date.valueOf("2016-06-30")));
+        trip2 = tripRepository.save(new Trip(driver2, "FORD", 7.5, "Moscow", "Astana", "2800", Date.valueOf("2016-06-30"), Date.valueOf("2016-07-02")));
+        trip3 = tripRepository.save(new Trip(driver3, "BMW", 7.2, "Gomel", "Rome", "2530", Date.valueOf("2016-07-01"), Date.valueOf("2016-07-03")));
+        trip4 = tripRepository.save(new Trip(driver4, "LADA", 5.5, "Chicago", "Dallas", "3000", Date.valueOf("2016-07-04"), Date.valueOf("2016-07-06")));
     }
 
     @Test
@@ -58,17 +71,17 @@ public class DaoTests {
         Driver driver = driverRepository.findOne(1L);
         driver.setAge(20);
         driverRepository.save(driver);
-        Assert.assertEquals(20, Lists.newArrayList(driverRepository.findAll()).get(0).getAge());
+        assertEquals(20, Lists.newArrayList(driverRepository.findAll()).get(0).getAge());
     }
 
     @Test
     public void getDriverByIdTest() {
-        Assert.assertEquals("Mike", driverRepository.findOne(1L).getName());
+        assertEquals("Mike", driverRepository.findOne(1L).getName());
     }
 
     @Test
     public void getDriverByNameTest() {
-        Assert.assertEquals(36, driverRepository.findByName("Rob").get().getAge());
+        assertEquals(36, driverRepository.findByName("Rob").get().getAge());
     }
 
     @Test(expected = ConstraintViolationException.class)
@@ -89,60 +102,73 @@ public class DaoTests {
     }
 
     @Test
+    public void zRemoveDriverTest() {
+        int size_before = (Lists.newArrayList(driverRepository.findAll())).size();
+        driverRepository.delete(1L);
+        int size_after = (Lists.newArrayList(driverRepository.findAll())).size();
+        assertEquals(size_before - 1, (Lists.newArrayList(driverRepository.findAll())).size());
+    }
+
+    @Test
     public void getTripByIdTest() {
-        Assert.assertEquals("Brest", tripRepository.findOne(1L).getStartPoint());
+        assertEquals("Brest", tripRepository.findOne(1L).getStartPoint());
     }
 
     @Test
     public void getAllTripsTest() {
-        Assert.assertEquals(4, Lists.newArrayList(tripRepository.findAll()).size());
+        assertEquals(4, Lists.newArrayList(tripRepository.findAll()).size());
     }
 
     @Test
     public void zAddTripTest() throws ParseException {
         int size_before = Lists.newArrayList(tripRepository.findAll()).size();
-        Trip trip = new Trip("Rob", "DAF", 13.8, "Brest", "Minsk", "350", Date.valueOf("2016-08-20"), Date.valueOf("2016-08-21"));
+        Driver driver = new Driver("Asas", 50);
+        driver = driverRepository.save(driver);
+        Trip trip = new Trip(driver, "DAF", 13.8, "Brest", "Minsk", "350", Date.valueOf("2016-08-20"), Date.valueOf("2016-08-21"));
         tripRepository.save(trip);
-        Assert.assertEquals(size_before + 1, Lists.newArrayList(tripRepository.findAll()).size());
+        assertEquals(size_before + 1, Lists.newArrayList(tripRepository.findAll()).size());
     }
 
     @Test
-    public void getTripByDriverNameTest() {
-        Assert.assertEquals("BMW", tripRepository.findByDriverName("Misha")
+    public void getTripByDriverTest() {
+        assertEquals("BMW", tripRepository.findByDriver(driverRepository.findById(3L).get())
                 .get(0)
                 .getCar());
     }
 
     @Test
     public void getTripByCarTest() {
-        Assert.assertEquals("Boris", tripRepository.findByCar("LADA")
+        assertEquals("Boris", tripRepository.findByCar("LADA")
                 .get(0)
-                .getDriverName());
+                .getDriver()
+                .getName());
     }
 
     @Test
     public void getTripByStartPointAndEndPointTest() {
-        Assert.assertEquals("Mike", tripRepository.findByStartPointAndEndPoint("Brest", "Minsk")
+        assertEquals("Mike", tripRepository.findByStartPointAndEndPoint("Brest", "Minsk")
                 .get(0)
-                .getDriverName());
+                .getDriver()
+                .getName());
     }
 
     @Test
     public void getTripByStartDateAndEndDateTest() throws ParseException {
-        Assert.assertEquals("Mike", tripRepository.findByStartDateBetweenAndEndDateBetween(
+        assertEquals("Mike", tripRepository.findByStartDateBetweenAndEndDateBetween(
                 Date.valueOf("2016-06-30"),
                 Date.valueOf("2016-06-30"),
                 Date.valueOf("2016-06-30"),
                 Date.valueOf("2016-06-30"))
                 .get(0)
-                .getDriverName());
+                .getDriver()
+                .getName());
     }
 
     @Test
     public void zRemoveTripTest() {
         int size_before = Lists.newArrayList(tripRepository.findAll()).size();
-        tripRepository.delete(5L);
-        Assert.assertEquals(size_before - 1, Lists.newArrayList(tripRepository.findAll()).size());
+        tripRepository.delete(3L);
+        assertEquals(size_before - 1, Lists.newArrayList(tripRepository.findAll()).size());
     }
 
 }

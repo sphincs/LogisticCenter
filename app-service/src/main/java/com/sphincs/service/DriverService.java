@@ -1,16 +1,18 @@
 package com.sphincs.service;
 
 import com.sphincs.domain.Driver;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Transactional
 public interface DriverService {
 
     Driver save(Driver driver);
 
-    List<Driver> findAll();
+    List<Driver> findAllDrivers();
 
-    Driver findById(Long id);
+    Driver findDriverById(Long id);
 
     long count();
 

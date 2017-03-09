@@ -1,6 +1,7 @@
 package com.sphincs.rest;
 
 import com.sphincs.domain.Driver;
+import com.sphincs.domain.RepresentationTrip;
 import com.sphincs.domain.Trip;
 import com.sphincs.service.DriverService;
 import com.sphincs.service.TripService;
@@ -23,6 +24,17 @@ public class TripRestController {
 
     private final DriverService driverService;
     private final TripService tripService;
+//    private static Driver driver1;
+//    private static Driver driver2;
+//    private static Driver driver3;
+//    private static Driver driver4;
+//    private static Driver driver5;
+//    private static Driver driver6;
+//    private static Driver driver7;
+//    private static Trip trip1;
+//    private static Trip trip2;
+//    private static Trip trip3;
+//    private static Trip trip4;
 
     @Autowired
     public TripRestController(DriverService driverService, TripService tripService) {
@@ -33,26 +45,25 @@ public class TripRestController {
     @ResponseBody
     @RequestMapping(value = "/autofill", method = RequestMethod.GET)
     public void getFillTables() throws ParseException {
-        fillDrivers();
-        fillTrips();
+        new AutoFill(driverService, tripService).getFillTables();
     }
 
-    private void fillDrivers() {
-        driverService.save(new Driver("Mike", 35));
-        driverService.save(new Driver("Bobby", 42));
-        driverService.save(new Driver("Spencer", 50));
-        driverService.save(new Driver("Misha", 36));
-        driverService.save(new Driver("Rob", 36));
-        driverService.save(new Driver("Boris", 37));
-        driverService.save(new Driver("Mitchel", 28));
-    }
-
-    private void fillTrips() throws ParseException {
-        tripService.save(new Trip("Mike", "DAF", 13.8, "Brest", "Minsk", "350", Date.valueOf("2016-06-30"), Date.valueOf("2016-06-30")));
-        tripService.save(new Trip("Bobby", "FORD", 7.5, "Moscow", "Astana", "2800", Date.valueOf("2016-06-30"), Date.valueOf("2016-07-02")));
-        tripService.save(new Trip("Misha", "BMW", 7.2, "Gomel", "Rome", "2530", Date.valueOf("2016-07-01"), Date.valueOf("2016-07-03")));
-        tripService.save(new Trip("Boris", "LADA", 5.5, "Chicago", "Dallas", "3000", Date.valueOf("2016-07-04"), Date.valueOf("2016-07-06")));
-    }
+//    private void fillDrivers() {
+//        driver1 = driverService.save(new Driver("Mike", 35));
+//        driver2 = driverService.save(new Driver("Bobby", 42));
+//        driver3 = driverService.save(new Driver("Misha", 36));
+//        driver4 = driverService.save(new Driver("Boris", 37));
+//        driver5 = driverService.save(new Driver("Spencer", 50));
+//        driver6 = driverService.save(new Driver("Rob", 36));
+//        driver7 = driverService.save(new Driver("Mitchel", 28));
+//    }
+//
+//    private void fillTrips() throws ParseException {
+//        trip1 = tripService.save(new Trip(driver1, "DAF", 13.8, "Brest", "Minsk", "350", Date.valueOf("2016-06-30"), Date.valueOf("2016-06-30")));
+//        trip2 = tripService.save(new Trip(driver2, "FORD", 7.5, "Moscow", "Astana", "2800", Date.valueOf("2016-06-30"), Date.valueOf("2016-07-02")));
+//        trip3 = tripService.save(new Trip(driver3, "BMW", 7.2, "Gomel", "Rome", "2530", Date.valueOf("2016-07-01"), Date.valueOf("2016-07-03")));
+//        trip4 = tripService.save(new Trip(driver4, "LADA", 5.5, "Chicago", "Dallas", "3000", Date.valueOf("2016-07-04"), Date.valueOf("2016-07-06")));
+//    }
 
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST)
@@ -63,19 +74,25 @@ public class TripRestController {
     @ResponseBody
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public ResponseEntity<List<Trip>> getAllTrips() {
-        return ok(tripService.findAll());
+        return ok(tripService.findAllTrips());
     }
 
     @ResponseBody
     @RequestMapping(value = "/id/{id}", method = RequestMethod.GET)
     public ResponseEntity<Trip> getTripById(@PathVariable Long id) {
-        return ok(tripService.findById(id));
+        return ok(tripService.findTripById(id));
     }
 
+//    @ResponseBody
+//    @RequestMapping(value = "/driver/{name}", method = RequestMethod.GET)
+//    public ResponseEntity<List<Trip>> getTripsByDriver(@PathVariable String name) {
+//        return ok(tripService.findByDriverName(name));
+//    }
+
     @ResponseBody
-    @RequestMapping(value = "/driver/{name}", method = RequestMethod.GET)
-    public ResponseEntity<List<Trip>> getTripsByDriver(@PathVariable String name) {
-        return ok(tripService.findByDriverName(name));
+    @RequestMapping(value = "/driver/{driverId}", method = RequestMethod.GET)
+    public ResponseEntity<List<Trip>> getTripsByDriver(@PathVariable Long driverId) {
+        return ok(tripService.findByDriver(driverService.findDriverById(driverId)));
     }
 
     @ResponseBody

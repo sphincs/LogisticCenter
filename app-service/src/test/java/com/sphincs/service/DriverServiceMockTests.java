@@ -42,14 +42,14 @@ public class DriverServiceMockTests {
     @Test
     public void driverFindAllTest() {
         given(driverRepository.findAll()).willReturn(new ArrayList<Driver>());
-        driverService.findAll();
+        driverService.findAllDrivers();
         verify(driverRepository, times(1)).findAll();
     }
 
     @Test
     public void driverFindByIdTest() {
         given(driverRepository.findById(1L)).willReturn(Optional.of(new Driver()));
-        driverService.findById(1L);
+        driverService.findDriverById(1L);
         verify(driverRepository, times(1)).findById(1L);
     }
 

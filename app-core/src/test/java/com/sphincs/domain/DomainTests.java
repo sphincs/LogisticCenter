@@ -40,7 +40,6 @@ public class DomainTests {
     @Test
     public void TripFieldsTest() throws ParseException {
         Driver driver = new Driver("Vasili Ivanych", 48);
-        String driverName = driver.getName();
         String car = "FORD";
         Double fuelRate100 = 7.0d;
         String startPoint = "Brest";
@@ -50,8 +49,8 @@ public class DomainTests {
         Date endDate = Date.valueOf("2016-06-28");
         Double sumFuel = 23.8;
 
-        trip = new Trip(driverName, car, fuelRate100, startPoint, endPoint, distance, startDate, endDate);
-        Assert.assertEquals("Vasili Ivanych", trip.getDriverName());
+        trip = new Trip(driver, car, fuelRate100, startPoint, endPoint, distance, startDate, endDate);
+        Assert.assertEquals("Vasili Ivanych", trip.getDriver().getName());
         Assert.assertEquals(car, trip.getCar());
         Assert.assertEquals(fuelRate100, trip.getFuelRate100());
         Assert.assertEquals(startPoint, trip.getStartPoint());
@@ -67,9 +66,9 @@ public class DomainTests {
         trip = new Trip();
         Driver driver = new Driver("Vasili Ivanych", 48);
 
-        Trip trip1 = new Trip(driver.getName(), "FORD", 7.0, "Brest", "Minsk", "340", Date.valueOf("2016-06-27"), Date.valueOf("2016-06-28"));
-        Trip trip2 = new Trip(driver.getName(), "FORD", 7.0, "Brest", "Minsk", "340", Date.valueOf("2016-06-27"), Date.valueOf("2016-06-28"));
-        Trip trip3 = new Trip(driver.getName(), "FORD", 7.0, "Brest", "Minsk", "340", Date.valueOf("2016-06-28"), Date.valueOf("2016-06-28"));
+        Trip trip1 = new Trip(driver, "FORD", 7.0, "Brest", "Minsk", "340", Date.valueOf("2016-06-27"), Date.valueOf("2016-06-28"));
+        Trip trip2 = new Trip(driver, "FORD", 7.0, "Brest", "Minsk", "340", Date.valueOf("2016-06-27"), Date.valueOf("2016-06-28"));
+        Trip trip3 = new Trip(driver, "FORD", 7.0, "Brest", "Minsk", "340", Date.valueOf("2016-06-28"), Date.valueOf("2016-06-28"));
 
         Assert.assertEquals(trip, trip);
         Assert.assertEquals(trip1, trip2);

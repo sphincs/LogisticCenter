@@ -1,6 +1,7 @@
 package com.sphincs.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import javax.validation.constraints.Pattern;
@@ -9,18 +10,20 @@ import java.io.Serializable;
 import java.sql.Date;
 
 @Entity
-@Table
+@Table(name = "trip")
 public class Trip implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
-    @Size(min = 2, max = 100,
-            message = "Driver's name must be between 2 and 100 characters of roman alphabet. Space is allow. ")
-    @Pattern(regexp = "^[a-zA-Z][a-zA-Z\\s]+",
-            message = "Driver's name must contains only roman letters. ")
-    private String driverName;
+    @ManyToOne
+    @JoinColumn(name = "driver_id")
+    @JsonIgnore
+    private Driver driver;
+
+    private Long driverId;
 
     @Size(min = 2, max = 20,
             message = "Car's name must be between 2 and 20 characters of roman alphabet. Space is allow. ")
@@ -58,9 +61,9 @@ public class Trip implements Serializable {
     public Trip() {
     }
 
-    public Trip(String driverName, String car, Double fuelRate100, String startPoint,
+    public Trip(Driver driver, String car, Double fuelRate100, String startPoint,
                 String endPoint, String distance, Date startDate, Date endDate) {
-        this.driverName = driverName;
+        this.driver = driver;
         this.car = car;
         this.fuelRate100 = fuelRate100;
         this.startPoint = startPoint;
@@ -69,6 +72,10 @@ public class Trip implements Serializable {
         this.startDate = startDate;
         this.endDate = endDate;
         setSumFuel();
+        this.driver.addTrip(this);
+        if (driver.getId() != null) {
+            this.driverId = driver.getId();
+        }
     }
 
     public Long getId() {
@@ -79,12 +86,20 @@ public class Trip implements Serializable {
         this.id = id;
     }
 
-    public String getDriverName() {
-        return driverName;
+    public Driver getDriver() {
+        return driver;
     }
 
-    public void setDriverName(String driverName) {
-        this.driverName = driverName;
+    public void setDriver(Driver driver) {
+        this.driver = driver;
+    }
+
+    public Long getDriverId() {
+        return driverId;
+    }
+
+    public void setDriverId(Long driverId) {
+        this.driverId = driverId;
     }
 
     public String getCar() {
@@ -164,7 +179,7 @@ public class Trip implements Serializable {
         Trip trip = (Trip) obj;
 
         if (id != null ? !id.equals(trip.id) : trip.id != null) return false;
-        if (driverName != null ? !driverName.equals(trip.driverName) : trip.driverName != null) return false;
+        if (driver != null ? !(driver == trip.driver) : trip.driver != null) return false;
         if (car != null ? !car.equals(trip.car) : trip.car != null) return false;
         if (fuelRate100 != null ? !fuelRate100.equals(trip.fuelRate100) : trip.fuelRate100 != null) return false;
         if (startPoint != null ? !startPoint.equals(trip.startPoint) : trip.startPoint != null) return false;
@@ -179,9 +194,9 @@ public class Trip implements Serializable {
 
     @Override
     public String toString() {
-        return "Trip: {" +
+        return String.format("Trip: {" +
                 "id=" + id +
-                "driverName=" + driverName +
+                ", driverId=" + driverId +
                 ", car=" + car +
                 ", fuelRate100=" + fuelRate100 +
                 ", startPoint=" + startPoint +
@@ -190,7 +205,7 @@ public class Trip implements Serializable {
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +
                 ", sumFuel=" + sumFuel +
-                '}';
+                '}');
     }
 
 }

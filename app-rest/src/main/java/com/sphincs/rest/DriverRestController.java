@@ -1,6 +1,7 @@
 package com.sphincs.rest;
 
 import com.sphincs.domain.Driver;
+import com.sphincs.domain.RepresentationDriver;
 import com.sphincs.service.DriverService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -34,7 +35,7 @@ public class DriverRestController {
     @ResponseBody
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public ResponseEntity<List<Driver>> getAllDrivers() {
-        return ok(driverService.findAll());
+        return ok(driverService.findAllDrivers());
     }
 
     @ResponseBody
@@ -47,7 +48,7 @@ public class DriverRestController {
     @ResponseBody
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<Driver> getDriverById(@PathVariable Long id) {
-        return ok(driverService.findById(id));
+        return ok(driverService.findDriverById(id));
     }
 
     @ResponseBody

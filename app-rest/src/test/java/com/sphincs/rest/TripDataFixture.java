@@ -11,7 +11,7 @@ public class TripDataFixture {
 
     public static Trip getNewTrip() throws ParseException {
         Trip trip = new Trip();
-        trip.setDriverName("Mike");
+        trip.setDriver(DriverDataFixture.getNewDriver());
         trip.setCar("VOLVO");
         trip.setFuelRate100(15.0d);
         trip.setStartPoint("Brest");
@@ -26,7 +26,7 @@ public class TripDataFixture {
     public static Trip getNewTripWithId(Long id) throws ParseException {
         Trip trip = new Trip();
         trip.setId(id);
-        trip.setDriverName("Mike");
+        trip.setDriver(DriverDataFixture.getNewDriver());
         trip.setCar("VOLVO");
         trip.setFuelRate100(15.0d);
         trip.setStartPoint("Gomel");
@@ -41,7 +41,7 @@ public class TripDataFixture {
     public static Trip getNewTripWithDriverRalph(Long id) throws ParseException {
         Trip trip = new Trip();
         trip.setId(id);
-        trip.setDriverName("Ralph");
+        trip.setDriver(DriverDataFixture.getNewDriver());
         trip.setCar("VOLVO");
         trip.setFuelRate100(15.0d);
         trip.setStartPoint("Brest");
@@ -71,7 +71,7 @@ public class TripDataFixture {
     public static Trip getTripByRoute(Long id) throws ParseException {
         Trip trip = new Trip();
         trip.setId(id);
-        trip.setDriverName("Mike");
+        trip.setDriver(DriverDataFixture.getNewDriver());
         trip.setCar("VOLVO");
         trip.setFuelRate100(15.0d);
         trip.setStartPoint("Brest");

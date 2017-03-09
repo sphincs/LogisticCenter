@@ -1,18 +1,25 @@
 package com.sphincs.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Entity
-@Table
+@Table(name = "driver")
 public class Driver implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
     @Size(min = 2, max = 100,
@@ -28,12 +35,17 @@ public class Driver implements Serializable {
             message = "Driver's age must be no more than 65 ages. ")
     private int age;
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "driver")
+    @JsonIgnore
+    private Set<Trip> trips;
+
     public Driver() {
     }
 
     public Driver(String name, int age) {
         this.name = name;
         this.age = age;
+        trips = new HashSet<>();
     }
 
     public Long getId() {
@@ -60,6 +72,26 @@ public class Driver implements Serializable {
         this.age = age;
     }
 
+    public Set<Trip> getTrips() {
+        return trips;
+    }
+
+//    public void setTrips(Set<Trip> trips) {
+//        this.trips = trips;
+//    }
+
+    public void addTrip(Trip trip) {
+        if (trips.contains(trip)) {
+            return;
+        }
+        trips.add(trip);
+        trip.setDriver(this);
+    }
+
+    public void removeTrip(Trip trip) {
+        trips.remove(trip);
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
@@ -79,7 +111,7 @@ public class Driver implements Serializable {
     public String toString() {
         return "Driver: {" +
                 "id=" + id +
-                "name=" + name +
+                ", name=" + name +
                 ", age=" + age +
                 '}';
     }

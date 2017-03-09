@@ -3,22 +3,17 @@ package com.sphincs.rest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sphincs.domain.Driver;
 import com.sphincs.service.DriverService;
-import com.sphincs.service.LogisticException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
-
-import java.util.Optional;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
@@ -36,7 +31,7 @@ public class DriverRestControllerMockTests {
 
     @Autowired
     protected MockMvc mockMvc;
-    @MockBean
+    @Mock
     protected DriverService driverService;
     @Autowired
     protected DriverRestController driverRestController;
@@ -58,7 +53,7 @@ public class DriverRestControllerMockTests {
         String driverJson = objectMapper.writeValueAsString(driver);
 
         mockMvc.perform(
-                post("/drivers")
+                post("/drivers/")
                         .content(driverJson)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
@@ -77,7 +72,7 @@ public class DriverRestControllerMockTests {
         String driverJson = objectMapper.writeValueAsString(DriverDataFixture.getBadNewDriver());
 
         mockMvc.perform(
-                post("/drivers")
+                post("/drivers/")
                         .content(driverJson)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
@@ -90,7 +85,7 @@ public class DriverRestControllerMockTests {
 
     @Test
     public void getAllDrivers() throws Exception {
-        given(driverService.findAll()).willReturn(DriverDataFixture.getAllDrivers());
+        given(driverService.findAllDrivers()).willReturn(DriverDataFixture.getAllDrivers());
 
         mockMvc.perform(
                 get("/drivers/")
@@ -101,7 +96,7 @@ public class DriverRestControllerMockTests {
                 .andExpect(content().string("[{\"id\":1,\"name\":\"Mike\",\"age\":35},"
                         + "{\"id\":2,\"name\":\"Bobby\",\"age\":33}]"));
 
-        verify(driverService, times(1)).findAll();
+        verify(driverService, times(1)).findAllDrivers();
 
     }
 
@@ -116,7 +111,7 @@ public class DriverRestControllerMockTests {
 
     @Test
     public void getDriverById() throws Exception {
-        given(driverService.findById(1L)).willReturn(DriverDataFixture.getExistingDriver(1L));
+        given(driverService.findDriverById(1L)).willReturn(DriverDataFixture.getExistingDriver(1L));
 
         mockMvc.perform(
                 get("/drivers/1").accept(MediaType.APPLICATION_JSON)
@@ -125,7 +120,7 @@ public class DriverRestControllerMockTests {
                 .andExpect(status().isOk())
                 .andExpect(content().string("{\"id\":1,\"name\":\"Mike\",\"age\":35}"));
 
-        verify(driverService, times(1)).findById(1L);
+        verify(driverService, times(1)).findDriverById(1L);
     }
 
     @Test

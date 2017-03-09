@@ -28,7 +28,7 @@ public class TripServiceImpl implements TripService {
     @Override
     public Trip save(Trip trip) {
         try {
-            Driver driver = driverService.findByName(trip.getDriverName());
+            Driver driver = driverService.findDriverById(trip.getDriverId());
             if (driver == null) {
                 throw new LogisticException("This driver not exist. ", HttpStatus.BAD_REQUEST);
             }
@@ -36,6 +36,15 @@ public class TripServiceImpl implements TripService {
                 throw new LogisticException("Check the dates, please. ", HttpStatus.BAD_REQUEST);
             if (isDriverFree(driver, trip)) {
                 trip.setSumFuel();
+                Trip oldTrip = new Trip();
+                for (Trip current : driver.getTrips()) {
+                    if (current.getId() == trip.getId()) {
+                        oldTrip = current;
+                    }
+                }
+                driver.removeTrip(oldTrip);
+                driver.addTrip(trip);
+                trip.setDriver(driver);
                 return tripRepository.save(trip);
             } else throw new LogisticException("This driver not available in this dates. ", HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
@@ -44,12 +53,12 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
-    public List<Trip> findAll() {
+     public List<Trip> findAllTrips() {
         return Lists.newArrayList(tripRepository.findAll());
     }
 
     @Override
-    public Trip findById(Long id) {
+    public Trip findTripById(Long id) {
         return tripRepository.findById(id)
                 .orElseThrow(() -> notFoundException("id", id.toString()));
     }
@@ -65,8 +74,8 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
-    public List<Trip> findByDriverName(String driverName) {
-        List<Trip> trips = Lists.newArrayList(tripRepository.findByDriverName(driverName));
+    public List<Trip> findByDriver(Driver driver) {
+        List<Trip> trips = Lists.newArrayList(tripRepository.findByDriver(driver));
         return trips;
     }
 
@@ -107,7 +116,7 @@ public class TripServiceImpl implements TripService {
     private boolean isDriverFree(Driver driver, Trip trip) {
         Date start = trip.getStartDate();
         Date end = trip.getEndDate();
-        List<Trip> trips = findByDriverName(driver.getName());
+        List<Trip> trips = findByDriver(driver);
         if (trips.isEmpty()) return true;
         for (Trip current : trips) {
             if ((current.getId() != trip.getId())
@@ -122,7 +131,7 @@ public class TripServiceImpl implements TripService {
 
     @Override
     public Map<String, Object> countFuelByDriver(String name) {
-        List<Trip> trips = findByDriverName(name);
+        List<Trip> trips = findByDriver(driverService.findByName(name));
         Map<String, Object> result = new HashMap<>();
         Double sum = 0d;
         for (Trip current : trips) {
@@ -156,4 +165,5 @@ public class TripServiceImpl implements TripService {
     private LogisticException notFoundException(String param, String value) {
         return new LogisticException(String.format("Trip with %s = %s not found.", param, value), HttpStatus.OK);
     }
+
 }

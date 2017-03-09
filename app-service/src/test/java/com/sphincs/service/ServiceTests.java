@@ -26,6 +26,18 @@ public class ServiceTests {
     @Autowired
     private TripService tripService;
 
+    private static Driver driver1;
+    private static Driver driver2;
+    private static Driver driver3;
+    private static Driver driver4;
+    private static Driver driver5;
+    private static Driver driver6;
+    private static Driver driver7;
+    private static Trip trip1;
+    private static Trip trip2;
+    private static Trip trip3;
+    private static Trip trip4;
+
     @Before
     public void setUpDatabase() throws ParseException {
         if (driverService.count() == 0) {
@@ -35,20 +47,20 @@ public class ServiceTests {
     }
 
     private void fillDrivers() {
-        driverService.save(new Driver("Mike", 35));
-        driverService.save(new Driver("Bobby", 42));
-        driverService.save(new Driver("Spencer", 50));
-        driverService.save(new Driver("Misha", 36));
-        driverService.save(new Driver("Rob", 36));
-        driverService.save(new Driver("Boris", 37));
-        driverService.save(new Driver("Mitchel", 28));
+        driver1 = driverService.save(new Driver("Mike", 35));
+        driver2 = driverService.save(new Driver("Bobby", 42));
+        driver3 = driverService.save(new Driver("Misha", 36));
+        driver4 = driverService.save(new Driver("Boris", 37));
+        driver5 = driverService.save(new Driver("Spencer", 50));
+        driver6 = driverService.save(new Driver("Rob", 36));
+        driver7 = driverService.save(new Driver("Mitchel", 28));
     }
 
     private void fillTrips() throws ParseException {
-        tripService.save(new Trip("Mike", "DAF", 13.8, "Brest", "Minsk", "350", Date.valueOf("2016-06-30"), Date.valueOf("2016-06-30")));
-        tripService.save(new Trip("Bobby", "FORD", 7.5, "Moscow", "Astana", "2800", Date.valueOf("2016-06-30"), Date.valueOf("2016-07-02")));
-        tripService.save(new Trip("Misha", "BMW", 7.2, "Gomel", "Rome", "2530", Date.valueOf("2016-07-01"), Date.valueOf("2016-07-03")));
-        tripService.save(new Trip("Boris", "LADA", 5.5, "Chicago", "Dallas", "3000", Date.valueOf("2016-07-04"), Date.valueOf("2016-07-06")));
+        trip1 = tripService.save(new Trip(driver1, "DAF", 13.8, "Brest", "Minsk", "350", Date.valueOf("2016-06-30"), Date.valueOf("2016-06-30")));
+        trip2 = tripService.save(new Trip(driver2, "FORD", 7.5, "Moscow", "Astana", "2800", Date.valueOf("2016-06-30"), Date.valueOf("2016-07-02")));
+        trip3 = tripService.save(new Trip(driver3, "BMW", 7.2, "Gomel", "Rome", "2530", Date.valueOf("2016-07-01"), Date.valueOf("2016-07-03")));
+        trip4 = tripService.save(new Trip(driver4, "LADA", 5.5, "Chicago", "Dallas", "3000", Date.valueOf("2016-07-04"), Date.valueOf("2016-07-06")));
     }
 
     @Test
@@ -80,57 +92,63 @@ public class ServiceTests {
 
     @Test
     public void eAddTripTest() throws ParseException {
-        int size_before = Lists.newArrayList(tripService.findAll()).size();
-        Trip trip = new Trip("Rob", "DAF", 13.8, "Brest", "Minsk", "350", Date.valueOf("2016-08-20"), Date.valueOf("2016-08-21"));
+        int size_before = Lists.newArrayList(tripService.findAllTrips()).size();
+        Trip trip = new Trip(driver6, "DAF", 13.8, "Brest", "Minsk", "350", Date.valueOf("2016-08-20"), Date.valueOf("2016-08-21"));
         tripService.save(trip);
-        Assert.assertEquals(size_before + 1, tripService.findAll().size());
+        Assert.assertEquals(size_before + 1, tripService.findAllTrips().size());
     }
 
     @Test
     public void fGetTripByIdTest() {
-        Assert.assertEquals("Moscow", tripService.findById(2L).getStartPoint());
+        Assert.assertEquals("Moscow", tripService.findTripById(2L).getStartPoint());
     }
 
     @Test
     public void gGetAllTripsTest() {
-        Assert.assertEquals(5, tripService.findAll().size());
+        Assert.assertEquals(5, tripService.findAllTrips().size());
     }
 
     @Test
-    public void hGetTripsByDriverNameTest() {
-        Assert.assertEquals("BMW", tripService.findByDriverName("Misha").get(0).getCar());
+    public void hGetTripsByDriverTest() {
+        Assert.assertEquals("BMW", tripService.findByDriver(driver3).get(0).getCar());
     }
 
     @Test
-    public void iUpdateTripTest() {
-        Trip trip = tripService.findById(1L);
-        trip.setDriverName("Rob");
-        trip.setEndPoint("Moscow");
-        tripService.save(trip);
-        Assert.assertEquals("Moscow", tripService.findByDriverName("Rob").get(0).getEndPoint());
+    public void iGetTripsByCarTest() {
+        Assert.assertEquals("Boris", tripService.findByCar("LADA").get(0).getDriver().getName());
     }
 
     @Test
-    public void jGetTripsByCarTest() {
-        Assert.assertEquals("Boris", tripService.findByCar("LADA").get(0).getDriverName());
+    public void jGetTripsByStartPointAndEndPointTest() {
+        Assert.assertEquals("Mike", tripService.findByStartPointAndEndPoint("Brest", "Minsk").get(0).getDriver().getName());
     }
 
     @Test
-    public void kGetTripsByStartPointAndEndPointTest() {
-        Assert.assertEquals("Rob", tripService.findByStartPointAndEndPoint("Brest", "Moscow").get(0).getDriverName());
+    public void kGetTripsByStartDateAndEndDateTest() throws ParseException {
+        Assert.assertEquals("Mike",tripService.findByStartDateAndEndDate(
+                Date.valueOf("2016-06-30"), Date.valueOf("2016-06-30")).get(0).getDriver().getName());
     }
+//    @Test
+//    public void lUpdateTripTest() {
+//        Trip trip = tripService.findTripById(1L);
+//        Driver driver = driverService.findDriverById(2L);
+////        trip.setDriver(driver2);
+//
+//        trip.setDriver(driver);
+//        trip.setEndPoint("Moscow");
+//        driver.addTrip(trip);
+//        driverService.save(driver);
+//        tripService.save(trip);
+//        Assert.assertEquals("Moscow", tripService.findTripById(1L).getEndPoint());
+//    }
 
-    @Test
-    public void lGetTripsByStartDateAndEndDateTest() throws ParseException {
-        Assert.assertEquals("Rob",tripService.findByStartDateAndEndDate(
-                Date.valueOf("2016-06-30"), Date.valueOf("2016-06-30")).get(0).getDriverName());
-    }
+
 
     @Test
     public void mRemoveTripTest() {
-        int size_before = tripService.findAll().size();
+        int size_before = tripService.findAllTrips().size();
         tripService.delete(5L);
-        Assert.assertEquals(size_before - 1, tripService.findAll().size());
+        Assert.assertEquals(size_before - 1, tripService.findAllTrips().size());
     }
 
 }

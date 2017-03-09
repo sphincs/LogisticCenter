@@ -1,17 +1,20 @@
 package com.sphincs.dao;
 
+import com.sphincs.domain.Driver;
 import com.sphincs.domain.Trip;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
 
+@Transactional
 public interface TripRepository extends CrudRepository<Trip, Long> {
 
     Optional<Trip> findById(Long id);
 
-    List<Trip> findByDriverName(String driverName);
+    List<Trip> findByDriver(Driver driver);
 
     List<Trip> findByCar(String car);
 

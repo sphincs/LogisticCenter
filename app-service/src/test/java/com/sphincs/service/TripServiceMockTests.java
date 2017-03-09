@@ -7,9 +7,9 @@ import com.sphincs.domain.Trip;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.sql.Date;
@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -26,9 +26,9 @@ import static org.mockito.Mockito.verify;
 @SpringBootTest
 public class TripServiceMockTests {
 
-    @MockBean
+    @Mock
     protected TripRepository tripRepository;
-    @MockBean
+    @Mock
     protected DriverService driverService;
     @Autowired
     protected TripService tripService;
@@ -40,28 +40,28 @@ public class TripServiceMockTests {
 
     @Test
     public void addTripTest() {
-        Trip trip = new Trip("Mike","VOLVO",15.0d,"Brest","Minsk","350",
+        Trip trip = new Trip(new Driver("Mike", 40),"VOLVO",15.0d,"Brest","Minsk","350",
                 Date.valueOf("2016-07-14"),Date.valueOf("2016-07-15"));
         List<Trip> list = Lists.newArrayList(trip);
         given(tripRepository.save(trip)).willReturn(trip);
-        given(tripRepository.findByDriverName(anyString())).willReturn(list);
-        given(driverService.findByName(anyString())).willReturn(new Driver("Mike", 40));
+        given(tripRepository.findByDriver(any(Driver.class))).willReturn(list);
+        given(driverService.findDriverById(anyLong())).willReturn(new Driver("Mike", 40));
         tripService.save(trip);
         verify(tripRepository, times(1)).save(trip);
-        verify(driverService, times(1)).findByName(anyString());
+        verify(driverService, times(1)).findDriverById(anyLong());
     }
 
     @Test
     public void findAllTripsTest() {
         given(tripRepository.findAll()).willReturn(new ArrayList<Trip>());
-        tripService.findAll();
+        tripService.findAllTrips();
         verify(tripRepository, times(1)).findAll();
     }
 
     @Test
     public void findTripByIdTest() {
         given(tripRepository.findById(1L)).willReturn(Optional.of(new Trip()));
-        tripService.findById(1L);
+        tripService.findTripById(1L);
         verify(tripRepository, times(1)).findById(1L);
     }
 
@@ -79,19 +79,19 @@ public class TripServiceMockTests {
     }
 
     @Test
-    public void findTripsByDriverNameTest() {
+    public void findTripsByDriverTest() {
         List<Trip> list = new ArrayList<>();
         list.add(new Trip());
-        given(tripRepository.findByDriverName(anyString())).willReturn(list);
-        tripService.findByDriverName("Mike");
-        verify(tripRepository, times(1)).findByDriverName(anyString());
+        given(tripRepository.findByDriver(any(Driver.class))).willReturn(list);
+        tripService.findByDriver(new Driver());
+        verify(tripRepository, times(1)).findByDriver(any(Driver.class));
     }
 
     @Test
-    public void findEmptyTripsListByDriverNameTest() {
-        given(tripRepository.findByDriverName(anyString())).willReturn(new ArrayList<>());
-        tripService.findByDriverName("Mike");
-        verify(tripRepository, times(1)).findByDriverName(anyString());
+    public void findEmptyTripsListByDriverTest() {
+        given(tripRepository.findByDriver(any(Driver.class))).willReturn(new ArrayList<>());
+        tripService.findByDriver(new Driver());
+        verify(tripRepository, times(1)).findByDriver(any(Driver.class));
     }
 
     @Test
@@ -113,7 +113,8 @@ public class TripServiceMockTests {
     @Test
     public void findTripsByPointsTest() {
         List<Trip> list = new ArrayList<>();
-        list.add(new Trip());
+        list.add(new Trip(new Driver("Mike", 40),"VOLVO",15.0d,"Brest","Minsk","350",
+                Date.valueOf("2016-07-14"),Date.valueOf("2016-07-15")));
         given(tripRepository.findByStartPointAndEndPoint(anyString(), anyString())).willReturn(list);
         tripService.findByStartPointAndEndPoint("Brest", "Minsk");
         verify(tripRepository, times(1)).findByStartPointAndEndPoint(anyString(), anyString());

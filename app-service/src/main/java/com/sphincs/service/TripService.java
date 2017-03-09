@@ -1,24 +1,27 @@
 package com.sphincs.service;
 
+import com.sphincs.domain.Driver;
 import com.sphincs.domain.Trip;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
 import java.util.List;
 import java.util.Map;
 
+@Transactional
 public interface TripService {
 
     Trip save(Trip trip);
 
-    List<Trip> findAll();
+    List<Trip> findAllTrips();
 
-    Trip findById(Long id);
+    Trip findTripById(Long id);
 
     long count();
 
     void delete(Long id);
 
-    List<Trip> findByDriverName(String driverName);
+    List<Trip> findByDriver(Driver driver);
 
     List<Trip> findByCar(String car);
 

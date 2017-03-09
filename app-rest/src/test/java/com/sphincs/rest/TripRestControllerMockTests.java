@@ -8,10 +8,10 @@ import com.sphincs.service.TripService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -36,9 +36,9 @@ public class TripRestControllerMockTests {
 
     @Autowired
     protected MockMvc mockMvc;
-    @MockBean
+    @Mock
     protected DriverService driverService;
-    @MockBean
+    @Mock
     protected TripService tripService;
     @Autowired
     protected TripRestController tripRestController;
@@ -71,10 +71,9 @@ public class TripRestControllerMockTests {
         verify(tripService, times(1)).save(any(Trip.class));
     }
 
-
     @Test
     public void getAllTripsTest() throws Exception {
-        given(tripService.findAll()).willReturn(TripDataFixture.getAllTrips());
+        given(tripService.findAllTrips()).willReturn(TripDataFixture.getAllTrips());
 
         mockMvc.perform(
                 get("/trips/")
@@ -82,19 +81,19 @@ public class TripRestControllerMockTests {
         )
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().string("[{\"id\":1,\"driverName\":\"Mike\",\"car\":\"VOLVO\","
-                + "\"fuelRate100\":15.0,\"startPoint\":\"Gomel\",\"endPoint\":\"Rome\",\"distance\":\"2530\","
+                .andExpect(content().string("[{\"id\":1,\"driverId\":null,"
+                + "\"car\":\"VOLVO\",\"fuelRate100\":15.0,\"startPoint\":\"Gomel\",\"endPoint\":\"Rome\",\"distance\":\"2530\","
                 + "\"startDate\":\"2016-07-05\",\"endDate\":\"2016-07-08\",\"sumFuel\":\"379,50\"},"
-                + "{\"id\":2,\"driverName\":\"Mike\",\"car\":\"VOLVO\",\"fuelRate100\":15.0,"
-                + "\"startPoint\":\"Gomel\",\"endPoint\":\"Rome\",\"distance\":\"2530\","
+                + "{\"id\":2,\"driverId\":null,\"car\":\"VOLVO\","
+                + "\"fuelRate100\":15.0,\"startPoint\":\"Gomel\",\"endPoint\":\"Rome\",\"distance\":\"2530\","
                 + "\"startDate\":\"2016-07-05\",\"endDate\":\"2016-07-08\",\"sumFuel\":\"379,50\"}]"));
 
-        verify(tripService, times(1)).findAll();
+        verify(tripService, times(1)).findAllTrips();
     }
 
     @Test
     public void getTripByIdTest() throws Exception {
-        given(tripService.findById(anyLong())).willReturn(TripDataFixture.getTripByRoute(1L));
+        given(tripService.findTripById(anyLong())).willReturn(TripDataFixture.getTripByRoute(1L));
 
         mockMvc.perform(
                 get("/trips/id/1")
@@ -102,25 +101,26 @@ public class TripRestControllerMockTests {
         )
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().string("{\"id\":1,\"driverName\":\"Mike\",\"car\":\"VOLVO\","
+                .andExpect(content().string("{\"id\":1,"
+                        + "\"driverId\":null,\"car\":\"VOLVO\","
                         + "\"fuelRate100\":15.0,\"startPoint\":\"Brest\",\"endPoint\":\"Minsk\",\"distance\":\"350\","
                         + "\"startDate\":\"2016-07-14\",\"endDate\":\"2016-07-15\",\"sumFuel\":\"52,50\"}"));
 
-        verify(tripService, times(1)).findById(anyLong());
+        verify(tripService, times(1)).findTripById(anyLong());
     }
 
     @Test
     public void getTripsByDriverTest() throws Exception {
-        given(tripService.findByDriverName(anyString())).willReturn(TripDataFixture.getTripsByDriver(anyString()));
+        given(tripService.findByDriver(any(Driver.class))).willReturn(TripDataFixture.getTripsByDriver(anyString()));
 
         mockMvc.perform(
-                get("/trips/driver/Ralph")
+                get("/trips/driver/1")
                         .accept(MediaType.APPLICATION_JSON)
         )
                 .andDo(print())
                 .andExpect(status().isOk());
 
-        verify(tripService, times(1)).findByDriverName(anyString());
+        verify(tripService, times(1)).findByDriver(any(Driver.class));
     }
 
     @Test

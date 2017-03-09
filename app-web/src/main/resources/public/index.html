@@ -41,9 +41,9 @@
     <legend>Driver manager</legend>
     <div class="block1" id="block1">
         <form id="driver_form" onsubmit="return false" >
-            <input type="text" name="driverId" placeholder="driverId" id="driverId" disabled/><br/>
-            <input type="text" name="name" placeholder="name" id="name"/><br/>
-            <input type="text" name="age" placeholder="age" id="age"/><br/>
+            <input type="text" name="driverId" placeholder="DriverID" id="driverId" disabled/><br/>
+            <input type="text" name="name" placeholder="Name" id="name"/><br/>
+            <input type="text" name="age" placeholder="Age" id="age"/><br/>
             <br/>
             <button type="button" id="add_driver">Add</button>
             <button type="button" id="update_driver" disabled >Update</button><br/>
@@ -58,16 +58,16 @@
     <legend>Trip manager</legend>
     <div class="block3" id="block3">
         <form id="trip_form" onsubmit="return false">
-            <input type="text" name="tripId" placeholder="tripId" id="tripId" disabled/><br/>
-            <input type="text" name="driverName" placeholder="driverName" id="driverName"/><br/>
-            <input type="text" name="car" placeholder="car" id="car"/><br/>
-            <input type="text" name="fuelRate100" placeholder="fuelRate100" id="fuelRate100"/><br/>
-            <input type="text" name="startPoint" placeholder="startPoint" id="startPoint"/><br/>
-            <input type="text" name="endPoint" placeholder="endPoint" id="endPoint"/><br/>
-            <input type="text" name="distance" placeholder="distance" id="distance"/><br/>
+            <input type="text" name="tripId" placeholder="TripID" id="tripId" disabled/><br/>
+            <input type="text" name="driver" placeholder="DriverID" id="driver"/><br/>
+            <input type="text" name="car" placeholder="Car" id="car"/><br/>
+            <input type="text" name="fuelRate100" placeholder="FuelRate100" id="fuelRate100"/><br/>
+            <input type="text" name="startPoint" placeholder="StartPoint" id="startPoint"/><br/>
+            <input type="text" name="endPoint" placeholder="EndPoint" id="endPoint"/><br/>
+            <input type="text" name="distance" placeholder="Distance" id="distance"/><br/>
             <input type="date" name="startDate" value="2016-08-23" id="startDate"/><br/>
             <input type="date" name="endDate" value="2016-08-24" id="endDate"/><br/>
-            <input type="text" name="sumFuel" placeholder="sumFuel" id="sumFuel" disabled/><br/>
+            <input type="text" name="sumFuel" placeholder="SumFuel" id="sumFuel" disabled/><br/>
 
             <button type="button" id="add_trip">Add</button>
             <button type="button" id="update_trip" disabled>Update</button><br/>
@@ -92,7 +92,7 @@
     $(document).ready(function(){
         autoFill();
         displayDrivers();
-        displayTrips();
+//        displayTrips();
     });
 
     /*      For Drivers     */
@@ -242,7 +242,7 @@
             complete: displayAllTrips
         })
         $("#tripId").val('');
-        $("#driverName").val('');
+        $("#driver").val('');
         $("#car").val('');
         $("#fuelRate100").val('');
         $("#startPoint").val('');
@@ -258,13 +258,13 @@
         $("#block4").empty();
         var table = document.createElement('table');
         table.setAttribute("border", "2");
-        $(table).append('<tr><td width="50">ID</td><td width="150">Driver\'s name</td><td width="100">Car</td>' +
+        $(table).append('<tr><td width="50">ID</td><td width="150">Driver\'s ID</td><td width="100">Car</td>' +
                 '<td width="100">Fuel rate</td><td width="100">Departure</td><td width="100">Destination</td>' +
                 '<td width="100">Distance</td><td width="100">Departure date</td><td width="110">Destination date</td>' +
                 '<td width="100">Summary fuel</td></tr>');
         block4.appendChild(table);
         $.each(data.responseJSON, function (index, value) {
-            $(table).append('<tr><td>' + value.id + '</td><td>' + value.driverName + '</td><td>' + value.car + '</td>' +
+            $(table).append('<tr><td>' + value.id + '</td><td>' + value.driverId + '</td><td>' + value.car + '</td>' +
                     '<td>' + value.fuelRate100 + '</td><td>' + value.startPoint + '</td><td>' + value.endPoint + '</td>' +
                     '<td>' + value.distance + '</td><td>' + value.startDate + '</td><td>' + value.endDate + '</td>' +
                     '<td>' + value.sumFuel + '</td><td>' +
@@ -279,7 +279,7 @@
         var id = $(this).data('id');
         $.ajax({
             method: "DELETE",
-            url: "http://localhost:8080/trips/remove/" + id,
+            url: "http://localhost:8080/trips/" + id,
             contentType: "application/json; charset=utf-8",
             processData: false,
             dataType: 'json',
@@ -303,7 +303,7 @@
 
     var getTripWithId = function(data) {
         $("#tripId").val(data.responseJSON.id);
-        $("#driverName").val(data.responseJSON.driverName);
+        $("#driver").val(data.responseJSON.driverId);
         $("#car").val(data.responseJSON.car);
         $("#fuelRate100").val(data.responseJSON.fuelRate100);
         $("#startPoint").val(data.responseJSON.startPoint);
@@ -320,7 +320,7 @@
         $("#trip_error").text("");
         var data = JSON.stringify({
             "id": $("#tripId").val(),
-            "driverName": $("#driverName").val(),
+            "driverId": parseInt($("#driver").val()),
             "car": $("#car").val(),
             "fuelRate100": parseFloat($("#fuelRate100").val()),
             "startPoint": $("#startPoint").val(),
@@ -352,7 +352,7 @@
         $("#trip_error").text("");
         var data = JSON.stringify({
             "id": null,
-            "driverName": $("#driverName").val(),
+            "driverId": $("#driver").val(),
             "car": $("#car").val(),
             "fuelRate100": parseFloat($("#fuelRate100").val()),
             "startPoint": $("#startPoint").val(),

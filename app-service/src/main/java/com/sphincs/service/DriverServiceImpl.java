@@ -25,12 +25,12 @@ public class DriverServiceImpl implements DriverService {
     }
 
     @Override
-    public List<Driver> findAll() {
+    public List<Driver> findAllDrivers() {
         return Lists.newArrayList(driverRepository.findAll());
     }
 
     @Override
-    public Driver findById(Long id) {
+    public Driver findDriverById(Long id) {
         return driverRepository.findById(id)
                 .orElseThrow(() -> notFoundException("id", id.toString()));
     }
